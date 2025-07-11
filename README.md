@@ -36,5 +36,5 @@ If you use this repository, please cite:
 
 > Re-evaluating Compute Performance in SBC Clusters: HPL Benchmarking Across Generations 
 > Krpic, Z.; Lukic, I.; Habijan, M.; Loina, L. 
-> Journal of Future Generation Computer Systems, 2025  
+> Future Generation Computer Systems, 2025  
 > DOI will be available
