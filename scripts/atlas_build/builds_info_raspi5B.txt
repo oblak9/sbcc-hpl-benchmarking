@@ -1,0 +1,28 @@
+1|1|atlarch|-D c -DWALL -b 64 -A ARM64xgene1||-pipe
+2|2|atlarch-native|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+3|3|arch-native|-D c -DWALL -b 64 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+4|4|all-spec|-D c -DWALL -b 64 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+5|5|atlarch-all-spec|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+6|6|cpu|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto"||-mcpu=cortex-a76+crypto
+7|7|cpu-crc|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crc+crypto"||-mcpu=cortex-a76+crc+crypto
+8|8|cpu-tune|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-mcpu=cortex-a76+crypto -mtune=cortex-a76
+9|9|cpu-tune-abi|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64"||-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64
+10|10|atlarch-cpu|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-mcpu=cortex-a76+crypto"||-mcpu=cortex-a76+crypto
+11|11|atlarch-cpu-tune|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-mcpu=cortex-a76+crypto -mtune=cortex-a76
+12|12|cpu-tune-clean-flagsearch|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-pipe
+13|13|generic|-D c -DWALL -Si archdef 1||-pipe
+14|14|noarch|-D c -DWALL -Si archdef 0||-pipe
+15|20|atlarch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe"|-O2|-pipe|877991 
+16|20|atlarch-native-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|872141 
+17|20|arch-native-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|880685 
+18|20|all-spec-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|878809 
+19|20|atlarch-all-spec-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|873161 
+20|20|cpu-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto"|-O2|-mcpu=cortex-a76+crypto|880663 
+21|20|cpu-crc-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crc+crypto"|-O2|-mcpu=cortex-a76+crc+crypto|877576 
+22|20|cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|877442 
+23|20|cpu-tune-abi-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64|877622 
+24|20|atlarch-cpu-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto"|-O2|-mcpu=cortex-a76+crypto|879875 
+25|20|atlarch-cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|872986 
+26|20|cpu-tune-clean-flagsearch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877668 
+27|20|generic-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877744 
+28|20|noarch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877641 

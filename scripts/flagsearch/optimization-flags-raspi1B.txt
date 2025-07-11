@@ -1,0 +1,7 @@
+-mcpu=cortex-a53
+-mtune=cortex-a53
+-march=armv8-a+crc
+-march=armv8-a
+-march=armv8.1-a
+-mabi=lp64
+# There must be an empty line at the end of this file

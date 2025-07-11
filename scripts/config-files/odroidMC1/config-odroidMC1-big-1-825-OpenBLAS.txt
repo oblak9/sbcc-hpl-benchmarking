@@ -1,0 +1,55 @@
+PLATFORM=odroidMC1-big
+CENTRAL_STORAGE=$USER@hp01:$HOME
+ATLAS_STORAGE=atlas-builds/$PLATFORM
+SCRIPTS_DIR=$HOME/clustershared/scripts
+BUILD_INFO=$SCRIPTS_DIR/atlas_build/builds_info_$PLATFORM-flags.txt
+LOG_FILE=$HOME/clustershared/hpl-results/log.txt
+WAIT_DIR=$HOME/wait-files
+MASTER_DEVICE=odroid10
+NUM_OF_NODES=1
+ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
+ATLAS_EXTRA_FLAGS="-m 2000 -Fa alg"
+
+################
+#HPL BUILD
+################
+HPL_DIR=$HOME/hpl-2.3
+HPL_DIR_OPENBLAS=$HOME/local/hpl-2.3
+HPL_EXCHANGE_BINARIES=0             # sometimes not all nodes build HPL binaries and have to be exchanged after building, then set to 1
+
+################
+#THROTTLING
+################
+MONITOR_THROTTLING_CPU=cpu4
+HPL_GENERIC_MAKEFILE=$SCRIPTS_DIR/hpl_build/Make.generic
+
+################
+#FLAGSEARCH_DIR
+################
+FLAGSEARCH_DIR=$SCRIPTS_DIR/flagsearch
+OPTIMIZATION_FLAGS_FILE=$FLAGSEARCH_DIR/optimization-flags-$PLATFORM.txt
+
+################
+#BIG_LITTLE
+################
+CORE_TYPE="big" #"big" for big cores, "small" for small cores, "" for not a big.LITTLE arch
+ATLAS_TIDS='--force-tids="4 4 5 6 7"'
+TASKSET="taskset -c 4,5,6,7"
+SPECIAL_FLAGS="-bind-to user:4,5,6,7"
+
+################
+#HPL RUN
+################
+MPIEXEC_BIND_TO=""                       # Can make a huge difference ("--bind-to core" vs. none on RPi4B makes a huge difference in HPL (in OpenBLAS))
+BLAS_IMPL="OpenBLAS"                                   # "ATLAS" or "OpenBLAS"
+WARMUP="no"                                            # do a single HPL run that doesn't go into results
+BUILD_RUN="no"                                         # "no" for parameter run "yes" for builds run
+TOP_BUILDs="linux_OpenBLAS"                                        # set if parameter run, unset if build run
+CORES_PER_NODE=4
+HOSTFILE=$HOME/hostsMC1
+RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-$BLAS_IMPL-params-big-825"   #change if parameter run (suffix "-builds")
+RESULTSFILE="$RESULTSDIR/results.txt"
+RUNs="0 1 2 3 4"                                                      # number of experiment repetitions
+Ns="13056 13824 14592"                            #"27520 25984 29056"/"13056 13824 14592"            #change if parameter run (25984 for builds)
+NBs="32 96 224 256"                             #"32 64 96 128 160 192 224 256"       #change if parameter run (128 for builds)
+Ps="1 2"                                #"1 2 4"                        #change if parameter run (2 for builds)

@@ -1,0 +1,8 @@
+1|1|atlarch|-D c -DWALL -b 32 -A ARMa9||-mcpu=cortex-a9 -fno-schedule-insns -fno-schedule-insns2
+2|2|cpu-tune|-D c -DWALL -b 32 -Fa al "-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3"||-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3
+3|3|arch-native-tune|-D c -DWALL -b 32 -Fa al "-march=native -mtune=cortex-a9 -mfloat-abi=hard -mfpu=neon-vfpv3"||-march=native -mtune=cortex-a9 -mfloat-abi=hard -mfpu=neon-vfpv3
+4|4|cpu-tune-overr|-D c -DWALL -b 32 -F al "-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3"||-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3
+5|5|atlarch-flags|-D c -DWALL -b 32  -Fa alg "-O3 -mcpu=cortex-a9 -fno-schedule-insns -fno-schedule-insns2 -fschedule-insns2 -mfpu=neon-vfpv3 -frename-registers -fno-tree-fre -fno-ivopts"|-O3|-mcpu=cortex-a9 -fno-schedule-insns -fno-schedule-insns2 -fschedule-insns2 -mfpu=neon-vfpv3 -frename-registers -fno-tree-fre -fno-ivopts
+6|6|cpu-tune-flags|-D c -DWALL -b 32  -Fa alg "-O3 -mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre -fno-ivopts"|-O3|-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre -fno-ivopts
+7|7|arch-native-tune-flags|-D c -DWALL -b 32  -Fa alg "-O3 -march=native -mtune=cortex-a9 -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre -fno-ivopts"|-O3|-march=native -mtune=cortex-a9 -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre -fno-ivopts
+8|8|cpu-tune-overr-flags|-D c -DWALL -b 32  -F alg "-O3 -mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre"|-O3|-mcpu=native -mfloat-abi=hard -mfpu=neon-vfpv3 -fno-schedule-insns -frename-registers -fno-tree-fre

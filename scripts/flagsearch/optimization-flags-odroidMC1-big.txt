@@ -1,0 +1,6 @@
+-march=armv7-a
+-march=armv7
+-mcpu=cortex-a15
+-mtune=cortex-a15
+-mfloat-abi=hard
+-mfpu=neon-vfpv4

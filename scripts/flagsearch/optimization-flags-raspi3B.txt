@@ -1,0 +1,10 @@
+-mcpu=cortex-A53
+-mtune=cortex-A53
+-march=armv8-a+crc
+-march=armv8-a
+-march=armv8.1-a
+-mfpu=crypto-neon-fp-armv8
+-mfpu=neon-fp-armv8
+-mneon-for-64bits
+-mfloat-abi=hard
+# There must be an empty line at the end of this file

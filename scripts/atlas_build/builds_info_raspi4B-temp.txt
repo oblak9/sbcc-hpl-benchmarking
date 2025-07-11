@@ -1,0 +1,6 @@
+14|20|cpu-overr|-D c -DWALL -b 64 -F alg "-mcpu=cortex-a72 -mabi=lp64"||-pipe
+15|20|cpu-tune-overr|-D c -DWALL -b 64 -F alg "-mcpu=cortex-a72 -mtune=cortex-a72 -mabi=lp64"||-pipe
+16|20|atlarch-cpu-overr|-D c -DWALL -b 64 -A ARM64xgene1 -F alg "-mcpu=cortex-a72 -mabi=lp64"||-pipe
+17|20|atlarch-cpu-tune-overr|-D c -DWALL -b 64 -A ARM64xgene1 -F alg "-mcpu=cortex-a72 -mtune=cortex-a72 -mabi=lp64"||-pipe
+18|20|generic|-D c -DWALL -Si archdef 1||-pipe
+19|20|noarch|-D c -DWALL -Si archdef 0||-pipe

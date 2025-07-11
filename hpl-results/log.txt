@@ -1,0 +1,1471 @@
+Running atlas builds on raspi12 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+Running atlas builds on raspi13 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is building line 2 of ATLAS build: 2|20|atlarch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fselective-scheduling2 -frename-registers"|-O2|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fselective-scheduling2 -frename-registers|156352 
+Running atlas builds on raspi14 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi13 is building line 3 of ATLAS build: 3|20|atlarch-gene-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2"|-O1|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2|153475 
+Running atlas builds on raspi11 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi14 is building line 4 of ATLAS build: 4|20|atlarch-gene-cpu-crypto-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-expensive-optimizations"|-O2|-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-expensive-optimizations|156708 
+raspi11 is building line 1 of ATLAS build: 1|20|archdef-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -frename-registers"|-O1|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -frename-registers|164737 
+raspi13 is sending ATLAS build atlarch-gene-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi13 is building line 7 of ATLAS build: 7|20|atlarch-cpu-crypto-flags|-D c -DWALL -b 64  -Fa alg "-O1 -mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fschedule-insns -frename-registers"|-O1|-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fschedule-insns -frename-registers|164793 
+raspi11 is sending ATLAS build archdef-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi11 is building line 5 of ATLAS build: 5|20|atlarch-gene-cpu-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-schedule-insns -fno-expensive-optimizations"|-O2|-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-schedule-insns -fno-expensive-optimizations|159699 
+raspi14 is sending ATLAS build atlarch-gene-cpu-crypto-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is sending ATLAS build atlarch-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is building line 6 of ATLAS build: 6|20|atlarch-cpu-flags|-D c -DWALL -b 64  -Fa alg "-Os -mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-tree-ter"|-Os|-mcpu=cortex-a53 -mtune=cortex-a53 -mfpu=neon-fp-armv8 -mneon-for-64bits -mfloat-abi=hard -fno-tree-ter|157809 
+raspi13 is sending ATLAS build atlarch-cpu-crypto-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is sending ATLAS build atlarch-cpu-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi11 is sending ATLAS build atlarch-gene-cpu-flags to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+Running hpl makefiles creation on raspi12
+Running hpl makefiles creation on raspi13
+raspi12 is building HPL for archdef-flags build
+Running hpl makefiles creation on raspi14
+raspi13 is building HPL for archdef-flags build
+raspi11 is building HPL for archdef-flags build
+raspi14 is building HPL for archdef-flags build
+raspi12 is building HPL for atlarch-flags build
+raspi13 is building HPL for atlarch-flags build
+raspi14 is building HPL for atlarch-flags build
+raspi11 is building HPL for atlarch-flags build
+raspi12 is building HPL for atlarch-gene-flags build
+raspi13 is building HPL for atlarch-gene-flags build
+raspi14 is building HPL for atlarch-gene-flags build
+raspi11 is building HPL for atlarch-gene-flags build
+raspi12 is building HPL for atlarch-gene-cpu-crypto-flags build
+raspi13 is building HPL for atlarch-gene-cpu-crypto-flags build
+raspi14 is building HPL for atlarch-gene-cpu-crypto-flags build
+raspi11 is building HPL for atlarch-gene-cpu-crypto-flags build
+raspi12 is building HPL for atlarch-gene-cpu-flags build
+raspi13 is building HPL for atlarch-gene-cpu-flags build
+raspi14 is building HPL for atlarch-gene-cpu-flags build
+raspi11 is building HPL for atlarch-gene-cpu-flags build
+raspi12 is building HPL for atlarch-cpu-flags build
+raspi13 is building HPL for atlarch-cpu-flags build
+raspi11 is building HPL for atlarch-cpu-flags build
+raspi14 is building HPL for atlarch-cpu-flags build
+raspi12 is building HPL for atlarch-cpu-crypto-flags build
+raspi13 is building HPL for atlarch-cpu-crypto-flags build
+raspi11 is building HPL for atlarch-cpu-crypto-flags build
+raspi14 is building HPL for atlarch-cpu-crypto-flags build
+Running hpl makefiles creation on raspi12
+Running hpl makefiles creation on raspi13
+raspi12 is building HPL for archdef build
+Running hpl makefiles creation on raspi14
+raspi13 is building HPL for archdef build
+raspi11 is building HPL for archdef build
+raspi14 is building HPL for archdef build
+raspi12 is building HPL for atlarch-gene build
+raspi13 is building HPL for atlarch-gene build
+raspi14 is building HPL for atlarch-gene build
+raspi11 is building HPL for atlarch-gene build
+raspi12 is building HPL for atlarch-gene-cpu-crypto build
+raspi13 is building HPL for atlarch-gene-cpu-crypto build
+raspi14 is building HPL for atlarch-gene-cpu-crypto build
+raspi11 is building HPL for atlarch-gene-cpu-crypto build
+raspi12 is building HPL for atlarch-gene-cpu build
+raspi13 is building HPL for atlarch-gene-cpu build
+raspi14 is building HPL for atlarch-gene-cpu build
+raspi11 is building HPL for atlarch-gene-cpu build
+raspi12 is building HPL for atlarch-cpu build
+raspi13 is building HPL for atlarch-cpu build
+raspi14 is building HPL for atlarch-cpu build
+raspi11 is building HPL for atlarch-cpu build
+raspi12 is building HPL for atlarch-cpu-crypto build
+raspi13 is building HPL for atlarch-cpu-crypto build
+raspi14 is building HPL for atlarch-cpu-crypto build
+raspi11 is building HPL for atlarch-cpu-crypto build
+raspi12 is building HPL for noarch-flags build
+raspi13 is building HPL for noarch-flags build
+raspi14 is building HPL for noarch-flags build
+raspi11 is building HPL for noarch-flags build
+raspi12 is building HPL for generic-flags build
+raspi13 is building HPL for generic-flags build
+raspi14 is building HPL for generic-flags build
+raspi11 is building HPL for generic-flags build
+Running atlas builds on raspi12 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+Running atlas builds on raspi13 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is building line 2 of ATLAS build: 2|20|atlarch-gene-cpu-flags-2|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2"|-O1|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2|160221 
+Running atlas builds on raspi14 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi13 is building line 3 of ATLAS build: 3|20|atlarch-cpu-flags-2|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -fno-schedule-insns -fno-tree-ter"|-Os|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -fno-schedule-insns -fno-tree-ter|157782 
+Running atlas builds on raspi11 and sending the build to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi14 is building line 4 of ATLAS build: 4|20|atlarch-cpu-crypto-flags-2|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -frename-registers"|-O1|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns -frename-registers|164885 
+raspi11 is building line 1 of ATLAS build: 1|20|atlarch-gene-cpu-crypto-flags-2|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2 -fmodulo-sched -fmodulo-sched-allow-regmoves -funroll-all-loops"|-O1|-pipe -fno-schedule-insns -mcpu=cortex-A53 -mfpu=crypto-neon-fp-armv8 -fschedule-insns2 -fmodulo-sched -fmodulo-sched-allow-regmoves -funroll-all-loops|154884 
+raspi14 is sending ATLAS build atlarch-cpu-crypto-flags-2 to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi13 is sending ATLAS build atlarch-cpu-flags-2 to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi12 is sending ATLAS build atlarch-gene-cpu-flags-2 to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+raspi11 is sending ATLAS build atlarch-gene-cpu-crypto-flags-2 to zdravak@hp01:/home/zdravak/atlas-builds/raspi3B
+Running hpl makefiles creation on raspi12
+Running hpl makefiles creation on raspi13
+raspi12 is building HPL for atlarch-gene-cpu-crypto-flags-2 build
+Running hpl makefiles creation on raspi14
+raspi13 is building HPL for atlarch-gene-cpu-crypto-flags-2 build
+raspi11 is building HPL for atlarch-gene-cpu-crypto-flags-2 build
+raspi14 is building HPL for atlarch-gene-cpu-crypto-flags-2 build
+raspi12 is building HPL for atlarch-gene-cpu-flags-2 build
+raspi13 is building HPL for atlarch-gene-cpu-flags-2 build
+raspi14 is building HPL for atlarch-gene-cpu-flags-2 build
+raspi11 is building HPL for atlarch-gene-cpu-flags-2 build
+raspi12 is building HPL for atlarch-cpu-flags-2 build
+raspi13 is building HPL for atlarch-cpu-flags-2 build
+raspi14 is building HPL for atlarch-cpu-flags-2 build
+raspi11 is building HPL for atlarch-cpu-flags-2 build
+raspi12 is building HPL for atlarch-cpu-crypto-flags-2 build
+raspi13 is building HPL for atlarch-cpu-crypto-flags-2 build
+raspi14 is building HPL for atlarch-cpu-crypto-flags-2 build
+raspi11 is building HPL for atlarch-cpu-crypto-flags-2 build
+Starting atlas builds on raspi31
+Starting atlas builds on raspi32
+Starting atlas builds on raspi33
+Starting atlas builds on raspi34
+raspi31 is building line 1 of ATLAS build: 1|1|atlarch|-D c -DWALL -b 64 -A ARM64xgene1||-pipe
+raspi33 is building line 3 of ATLAS build: 3|3|arch-native|-D c -DWALL -b 64 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+raspi32 is building line 2 of ATLAS build: 2|2|atlarch-native|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+raspi34 is building line 4 of ATLAS build: 4|4|all-spec|-D c -DWALL -b 64 -Fa alg "-march=-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+Starting atlas builds on raspi31
+Starting atlas builds on raspi32
+Starting atlas builds on raspi33
+Starting atlas builds on raspi34
+raspi31 is building line 1 of ATLAS build: 1|1|atlarch|-D c -DWALL -b 64 -A ARM64xgene1||-pipe
+raspi32 is building line 2 of ATLAS build: 2|2|atlarch-native|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+raspi33 is building line 3 of ATLAS build: 3|3|arch-native|-D c -DWALL -b 64 -Fa alg "-march=native -mtune=native -mcpu=native"||-march=native -mtune=native -mcpu=native
+raspi34 is building line 4 of ATLAS build: 4|4|all-spec|-D c -DWALL -b 64 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+raspi32 is building line 6 of ATLAS build: 6|6|cpu|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto"||-mcpu=cortex-a76+crypto
+raspi31 is building line 5 of ATLAS build: 5|5|atlarch-all-spec|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+raspi31 is building line 9 of ATLAS build: 9|9|cpu-tune-abi|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64"||-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64
+raspi34 is building line 8 of ATLAS build: 8|8|cpu-tune|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-mcpu=cortex-a76+crypto -mtune=cortex-a76
+raspi33 is building line 7 of ATLAS build: 7|7|cpu-crc|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crc+crypto"||-mcpu=cortex-a76+crc+crypto
+raspi32 is building line 10 of ATLAS build: 10|10|atlarch-cpu|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-mcpu=cortex-a76+crypto"||-mcpu=cortex-a76+crypto
+raspi32 is building line 14 of ATLAS build: 14|14|noarch|-D c -DWALL -Si archdef 0||-pipe
+raspi31 is building line 13 of ATLAS build: 13|13|generic|-D c -DWALL -Si archdef 1||-pipe
+raspi34 is building line 12 of ATLAS build: 12|12|cpu-tune-clean-flagsearch|-D c -DWALL -b 64 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-pipe
+raspi33 is building line 11 of ATLAS build: 11|11|atlarch-cpu-tune|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-mcpu=cortex-a76+crypto -mtune=cortex-a76"||-mcpu=cortex-a76+crypto -mtune=cortex-a76
+Distributing /home/zdravak/atlas-all-spec: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-arch-native: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-all-spec: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu-tune: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-native: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-cpu: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-cpu-crc: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-cpu-tune: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-cpu-tune-abi: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-generic: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-noarch: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-all-spec: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-arch-native: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-atlarch: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-all-spec: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu-tune: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-native: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-cpu: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-cpu-crc: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-abi: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-generic: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-noarch: to raspi32
+Distributing ARCHS to raspi32
+Distributing atlcomp.txt to raspi32
+Distributing atlconf.txt to raspi32
+Distributing ATLrun.sh to raspi32
+Distributing bin to raspi32
+Distributing EXtest to raspi32
+Distributing include to raspi32
+Distributing interfaces to raspi32
+Distributing lib to raspi32
+Distributing Makefile to raspi32
+Distributing Make.inc to raspi32
+Distributing Make.top to raspi32
+Distributing results to raspi32
+Distributing src to raspi32
+Distributing tune to raspi32
+Distributing /home/zdravak/atlas-all-spec: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-arch-native: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-atlarch: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-all-spec: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu-tune: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-native: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-cpu: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-cpu-crc: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-cpu-tune: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-abi: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-generic: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-noarch: to raspi33
+Distributing ARCHS to raspi33
+Distributing atlcomp.txt to raspi33
+Distributing atlconf.txt to raspi33
+Distributing ATLrun.sh to raspi33
+Distributing bin to raspi33
+Distributing EXtest to raspi33
+Distributing include to raspi33
+Distributing interfaces to raspi33
+Distributing lib to raspi33
+Distributing Makefile to raspi33
+Distributing Make.inc to raspi33
+Distributing Make.top to raspi33
+Distributing results to raspi33
+Distributing src to raspi33
+Distributing tune to raspi33
+Distributing /home/zdravak/atlas-all-spec: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-arch-native: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-atlarch: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-atlarch-all-spec: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-tune: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-atlarch-native: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-cpu: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-cpu-crc: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-abi: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-generic: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Distributing /home/zdravak/atlas-noarch: to raspi34
+Distributing ARCHS to raspi34
+Distributing atlcomp.txt to raspi34
+Distributing atlconf.txt to raspi34
+Distributing ATLrun.sh to raspi34
+Distributing bin to raspi34
+Distributing EXtest to raspi34
+Distributing include to raspi34
+Distributing interfaces to raspi34
+Distributing lib to raspi34
+Distributing Makefile to raspi34
+Distributing Make.inc to raspi34
+Distributing Make.top to raspi34
+Distributing results to raspi34
+Distributing src to raspi34
+Distributing tune to raspi34
+Running hpl makefiles creation on raspi31
+Running hpl makefiles creation on raspi32
+raspi31 is building HPL for atlarch build
+Running hpl makefiles creation on raspi33
+Error: Required libraries not built for atlarch, skipping.
+raspi32 is building HPL for atlarch-native build
+Running hpl makefiles creation on raspi34
+Error: Required libraries not built for atlarch, skipping.
+Error: Required libraries not built for atlarch-native, skipping.
+raspi33 is building HPL for arch-native build
+Error: Required libraries not built for atlarch, skipping.
+Error: Required libraries not built for atlarch-native, skipping.
+Error: Required libraries not built for arch-native, skipping.
+raspi34 is building HPL for all-spec build
+raspi31 is building HPL for atlarch-native build
+Error: Required libraries not built for arch-native, skipping.
+Error: Required libraries not built for all-spec, skipping.
+Error: Required libraries not built for atlarch-all-spec, skipping.
+raspi32 is building HPL for cpu build
+Error: Required libraries not built for all-spec, skipping.
+Error: Required libraries not built for atlarch-all-spec, skipping.
+Error: Required libraries not built for cpu, skipping.
+raspi33 is building HPL for cpu-crc build
+Error: Required libraries not built for atlarch-all-spec, skipping.
+Error: Required libraries not built for cpu, skipping.
+Error: Required libraries not built for cpu-crc, skipping.
+raspi34 is building HPL for cpu-tune build
+raspi31 is building HPL for arch-native build
+Error: Required libraries not built for cpu-crc, skipping.
+Error: Required libraries not built for cpu-tune, skipping.
+Error: Required libraries not built for cpu-tune-abi, skipping.
+raspi32 is building HPL for atlarch-cpu build
+Error: Required libraries not built for cpu-tune, skipping.
+Error: Required libraries not built for cpu-tune-abi, skipping.
+Error: Required libraries not built for atlarch-cpu, skipping.
+raspi33 is building HPL for atlarch-cpu-tune build
+Error: Required libraries not built for cpu-tune-abi, skipping.
+Error: Required libraries not built for atlarch-cpu, skipping.
+Error: Required libraries not built for atlarch-cpu-tune, skipping.
+raspi34 is building HPL for cpu-tune-clean-flagsearch build
+raspi31 is building HPL for all-spec build
+Error: Required libraries not built for atlarch-cpu-tune, skipping.
+Error: Required libraries not built for cpu-tune-clean-flagsearch, skipping.
+Error: Required libraries not built for generic, skipping.
+raspi32 is building HPL for noarch build
+Error: Required libraries not built for cpu-tune-clean-flagsearch, skipping.
+Error: Required libraries not built for generic, skipping.
+Error: Required libraries not built for noarch, skipping.
+Error: Required libraries not built for generic, skipping.
+Error: Required libraries not built for noarch, skipping.
+raspi31 is building HPL for atlarch-all-spec build
+raspi31 is building HPL for cpu build
+raspi31 is building HPL for cpu-crc build
+raspi31 is building HPL for cpu-tune build
+raspi31 is building HPL for cpu-tune-abi build
+raspi31 is building HPL for atlarch-cpu build
+raspi31 is building HPL for atlarch-cpu-tune build
+raspi31 is building HPL for cpu-tune-clean-flagsearch build
+raspi31 is building HPL for generic build
+raspi31 is building HPL for noarch build
+Distributing /home/zdravak/atlas-all-spec: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-arch-native: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-all-spec: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu-tune: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing /home/zdravak/atlas-all-spec: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing atlconf.txt to raspi31
+Distributing ATLrun.sh to raspi31
+Distributing bin to raspi31
+Distributing EXtest to raspi31
+Distributing include to raspi31
+Distributing interfaces to raspi31
+Distributing lib to raspi31
+Distributing Makefile to raspi31
+Distributing Make.inc to raspi31
+Distributing Make.top to raspi31
+Distributing results to raspi31
+Distributing src to raspi31
+Distributing tune to raspi31
+Distributing /home/zdravak/atlas-arch-native: to raspi31
+Distributing ARCHS to raspi31
+Distributing atlcomp.txt to raspi31
+Distributing /home/zdravak/atlas-generic to raspi31
+Distributing /home/zdravak/atlas-atlarch-native to raspi31
+Distributing /home/zdravak/atlas-atlarch to raspi31
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi31
+Distributing /home/zdravak/atlas-cpu-tune to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi31
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi31
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi31
+Distributing /home/zdravak/atlas-noarch to raspi31
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi31
+Distributing /home/zdravak/atlas-all-spec to raspi31
+Distributing /home/zdravak/atlas-cpu-crc to raspi31
+Distributing /home/zdravak/atlas-cpu to raspi31
+Distributing /home/zdravak/atlas-arch-native to raspi31
+Distributing /home/zdravak/atlas-generic to raspi32
+Distributing /home/zdravak/atlas-atlarch-native to raspi32
+Distributing /home/zdravak/atlas-atlarch to raspi32
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi32
+Distributing /home/zdravak/atlas-noarch to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi32
+Distributing /home/zdravak/atlas-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-crc to raspi32
+Distributing /home/zdravak/atlas-cpu to raspi32
+Distributing /home/zdravak/atlas-arch-native to raspi32
+Distributing /home/zdravak/atlas-generic to raspi33
+Distributing /home/zdravak/atlas-atlarch-native to raspi33
+Distributing /home/zdravak/atlas-atlarch to raspi33
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu-tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi33
+Distributing /home/zdravak/atlas-noarch to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi33
+Distributing /home/zdravak/atlas-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu-crc to raspi33
+Distributing /home/zdravak/atlas-cpu to raspi33
+Distributing /home/zdravak/atlas-arch-native to raspi33
+Distributing /home/zdravak/atlas-generic to raspi34
+Distributing /home/zdravak/atlas-atlarch-native to raspi34
+Distributing /home/zdravak/atlas-atlarch to raspi34
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi34
+Distributing /home/zdravak/atlas-cpu-tune to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi34
+Distributing /home/zdravak/atlas-noarch to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi34
+Distributing /home/zdravak/atlas-all-spec to raspi34
+Distributing /home/zdravak/atlas-cpu-crc to raspi34
+Distributing /home/zdravak/atlas-cpu to raspi34
+Distributing /home/zdravak/atlas-arch-native to raspi34
+Distributing /home/zdravak/atlas-generic to raspi32
+Distributing /home/zdravak/atlas-atlarch to raspi32
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi32
+Distributing /home/zdravak/atlas-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-crc to raspi32
+Distributing /home/zdravak/atlas-arch-native to raspi32
+Distributing /home/zdravak/atlas-generic to raspi33
+Distributing /home/zdravak/atlas-atlarch-native to raspi33
+Distributing /home/zdravak/atlas-atlarch to raspi33
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu-tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi33
+Distributing /home/zdravak/atlas-noarch to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi33
+Distributing /home/zdravak/atlas-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu to raspi33
+Distributing /home/zdravak/atlas-generic to raspi34
+Distributing /home/zdravak/atlas-atlarch-native to raspi34
+Distributing /home/zdravak/atlas-atlarch to raspi34
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi34
+Distributing /home/zdravak/atlas-noarch to raspi34
+Distributing /home/zdravak/atlas-cpu-crc to raspi34
+Distributing /home/zdravak/atlas-cpu to raspi34
+Distributing /home/zdravak/atlas-arch-native to raspi34
+Distributing /home/zdravak/atlas-generic to raspi32
+Distributing /home/zdravak/atlas-atlarch to raspi32
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi32
+Distributing /home/zdravak/atlas-all-spec to raspi32
+Distributing /home/zdravak/atlas-cpu-crc to raspi32
+Distributing /home/zdravak/atlas-arch-native to raspi32
+Distributing /home/zdravak/atlas-generic to raspi33
+Distributing /home/zdravak/atlas-atlarch-native to raspi33
+Distributing /home/zdravak/atlas-atlarch to raspi33
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu-tune to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi33
+Distributing /home/zdravak/atlas-noarch to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch to raspi33
+Distributing /home/zdravak/atlas-all-spec to raspi33
+Distributing /home/zdravak/atlas-cpu to raspi33
+Distributing /home/zdravak/atlas-generic to raspi34
+Distributing /home/zdravak/atlas-atlarch-native to raspi34
+Distributing /home/zdravak/atlas-atlarch to raspi34
+Distributing /home/zdravak/atlas-atlarch-all-spec to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-tune to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-abi to raspi34
+Distributing /home/zdravak/atlas-noarch to raspi34
+Distributing /home/zdravak/atlas-cpu-crc to raspi34
+Distributing /home/zdravak/atlas-cpu to raspi34
+Distributing /home/zdravak/atlas-arch-native to raspi34
+Starting atlas builds on raspi32
+Starting atlas builds on raspi33
+Starting atlas builds on raspi34
+Starting atlas builds on raspi31
+Starting atlas builds on raspi32
+Starting atlas builds on raspi33
+Starting atlas builds on raspi34
+Starting atlas builds on raspi31
+raspi31 is building line 1 of ATLAS build: 1|20|atlarch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe"|-O2|-pipe|877991 
+raspi32 is building line 2 of ATLAS build: 2|20|atlarch-native-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|872141 
+raspi33 is building line 3 of ATLAS build: 3|20|arch-native-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|880685 
+raspi34 is building line 4 of ATLAS build: 4|20|all-spec-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|878809 
+raspi34 is building line 8 of ATLAS build: 8|20|cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|877442 
+raspi33 is building line 7 of ATLAS build: 7|20|cpu-crc-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crc+crypto"|-O2|-mcpu=cortex-a76+crc+crypto|877576 
+raspi31 is building line 5 of ATLAS build: 5|20|atlarch-all-spec-flags|-D c -DWALL -b 64  -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|873161 
+raspi32 is building line 6 of ATLAS build: 6|20|cpu-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto"|-O2|-mcpu=cortex-a76+crypto|880663 
+raspi34 is building line 12 of ATLAS build: 12|20|cpu-tune-clean-flagsearch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877668 
+raspi33 is building line 11 of ATLAS build: 11|20|atlarch-cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|872986 
+raspi31 is building line 9 of ATLAS build: 9|20|cpu-tune-abi-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76 -mabi=lp64|877622 
+raspi32 is building line 10 of ATLAS build: 10|20|atlarch-cpu-flags|-D c -DWALL -b 64  -Fa alg "-O2 -mcpu=cortex-a76+crypto"|-O2|-mcpu=cortex-a76+crypto|879875 
+raspi31 is building line 13 of ATLAS build: 13|20|generic-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877744 
+raspi32 is building line 14 of ATLAS build: 14|20|noarch-flags|-D c -DWALL -b 64  -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877641 
+Distributing /home/zdravak/atlas-cpu-tune-flags to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-abi-flags to raspi32
+Distributing /home/zdravak/atlas-atlarch-flags to raspi32
+Distributing /home/zdravak/atlas-generic-flags to raspi32
+Distributing /home/zdravak/atlas-arch-native-flags to raspi32
+Distributing /home/zdravak/atlas-atlarch-cpu-tune-flags to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch-flags to raspi32
+Distributing /home/zdravak/atlas-cpu-crc-flags to raspi32
+Distributing /home/zdravak/atlas-all-spec-flags to raspi32
+Distributing /home/zdravak/atlas-atlarch-all-spec-flags to raspi32
+Distributing /home/zdravak/atlas-cpu-tune-flags to raspi33
+Distributing /home/zdravak/atlas-atlarch-native-flags to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-abi-flags to raspi33
+Distributing /home/zdravak/atlas-atlarch-flags to raspi33
+Distributing /home/zdravak/atlas-generic-flags to raspi33
+Distributing /home/zdravak/atlas-cpu-flags to raspi33
+Distributing /home/zdravak/atlas-atlarch-cpu-flags to raspi33
+Distributing /home/zdravak/atlas-cpu-tune-clean-flagsearch-flags to raspi33
+Distributing /home/zdravak/atlas-all-spec-flags to raspi33
+Distributing /home/zdravak/atlas-noarch-flags to raspi33
+Distributing /home/zdravak/atlas-atlarch-all-spec-flags to raspi33
+Distributing /home/zdravak/atlas-atlarch-native-flags to raspi34
+Distributing /home/zdravak/atlas-cpu-tune-abi-flags to raspi34
+Distributing /home/zdravak/atlas-atlarch-flags to raspi34
+Distributing /home/zdravak/atlas-generic-flags to raspi34
+Distributing /home/zdravak/atlas-cpu-flags to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-flags to raspi34
+Distributing /home/zdravak/atlas-arch-native-flags to raspi34
+Distributing /home/zdravak/atlas-atlarch-cpu-tune-flags to raspi34
+Distributing /home/zdravak/atlas-cpu-crc-flags to raspi34
+Distributing /home/zdravak/atlas-noarch-flags to raspi34
+Distributing /home/zdravak/atlas-atlarch-all-spec-flags to raspi34
+Running hpl makefiles creation on raspi32
+Running hpl makefiles creation on raspi33
+Running hpl makefiles creation on raspi34
+Running hpl makefiles creation on raspi31
+raspi31 is building HPL for atlarch-flags build
+raspi32 is building HPL for atlarch-flags build
+raspi33 is building HPL for atlarch-flags build
+raspi34 is building HPL for atlarch-flags build
+raspi31 is building HPL for atlarch-native-flags build
+raspi33 is building HPL for atlarch-native-flags build
+raspi32 is building HPL for atlarch-native-flags build
+raspi31 is building HPL for arch-native-flags build
+raspi33 is building HPL for arch-native-flags build
+raspi32 is building HPL for arch-native-flags build
+raspi31 is building HPL for all-spec-flags build
+raspi32 is building HPL for all-spec-flags build
+raspi33 is building HPL for all-spec-flags build
+raspi32 is building HPL for atlarch-all-spec-flags build
+raspi33 is building HPL for atlarch-all-spec-flags build
+raspi31 is building HPL for atlarch-all-spec-flags build
+raspi34 is building HPL for atlarch-native-flags build
+raspi33 is building HPL for cpu-flags build
+raspi32 is building HPL for cpu-flags build
+raspi31 is building HPL for cpu-flags build
+raspi34 is building HPL for arch-native-flags build
+raspi33 is building HPL for cpu-crc-flags build
+raspi32 is building HPL for cpu-crc-flags build
+raspi31 is building HPL for cpu-crc-flags build
+raspi34 is building HPL for all-spec-flags build
+raspi33 is building HPL for cpu-tune-flags build
+raspi32 is building HPL for cpu-tune-flags build
+raspi34 is building HPL for atlarch-all-spec-flags build
+raspi31 is building HPL for cpu-tune-flags build
+raspi33 is building HPL for cpu-tune-abi-flags build
+raspi32 is building HPL for cpu-tune-abi-flags build
+raspi34 is building HPL for cpu-flags build
+raspi31 is building HPL for cpu-tune-abi-flags build
+raspi33 is building HPL for atlarch-cpu-flags build
+raspi32 is building HPL for atlarch-cpu-flags build
+raspi34 is building HPL for cpu-crc-flags build
+raspi31 is building HPL for atlarch-cpu-flags build
+raspi33 is building HPL for atlarch-cpu-tune-flags build
+raspi32 is building HPL for atlarch-cpu-tune-flags build
+raspi34 is building HPL for cpu-tune-flags build
+raspi31 is building HPL for atlarch-cpu-tune-flags build
+raspi33 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi32 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi34 is building HPL for cpu-tune-abi-flags build
+raspi31 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi33 is building HPL for generic-flags build
+raspi32 is building HPL for generic-flags build
+raspi34 is building HPL for atlarch-cpu-flags build
+raspi31 is building HPL for generic-flags build
+raspi33 is building HPL for noarch-flags build
+raspi32 is building HPL for noarch-flags build
+raspi31 is building HPL for noarch-flags build
+raspi34 is building HPL for atlarch-cpu-tune-flags build
+raspi34 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi34 is building HPL for generic-flags build
+raspi34 is building HPL for noarch-flags build
+Starting atlas builds on raspi32
+Starting atlas builds on raspi33
+Starting atlas builds on raspi34
+Starting atlas builds on raspi31
+raspi31 is building line 1 of ATLAS build: 1|20|atlarch-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -pipe"|-O2|-pipe|877991 
+raspi33 is building line 3 of ATLAS build: 5|20|atlarch-all-spec-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|873161 
+raspi32 is building line 2 of ATLAS build: 2|20|atlarch-native-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|872141 
+raspi34 is building line 4 of ATLAS build: 11|20|atlarch-cpu-tune-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|872986 
+raspi31 is building line 5 of ATLAS build: 12|20|cpu-tune-clean-flagsearch-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877668 
+Running hpl makefiles creation on raspi32
+Running hpl makefiles creation on raspi33
+Running hpl makefiles creation on raspi34
+Running hpl makefiles creation on raspi31
+raspi34 is building HPL for atlarch-flags build
+raspi32 is building HPL for atlarch-flags build
+raspi31 is building HPL for atlarch-flags build
+raspi33 is building HPL for atlarch-native-flags build
+raspi32 is building HPL for atlarch-native-flags build
+raspi34 is building HPL for atlarch-native-flags build
+raspi33 is building HPL for atlarch-all-spec-flags build
+raspi32 is building HPL for atlarch-all-spec-flags build
+raspi34 is building HPL for atlarch-all-spec-flags build
+raspi31 is building HPL for atlarch-native-flags build
+raspi33 is building HPL for atlarch-cpu-tune-flags build
+raspi34 is building HPL for atlarch-cpu-tune-flags build
+raspi32 is building HPL for atlarch-cpu-tune-flags build
+raspi33 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi34 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi32 is building HPL for cpu-tune-clean-flagsearch-flags build
+raspi31 is building HPL for atlarch-all-spec-flags build
+raspi31 is building HPL for atlarch-cpu-tune-flags build
+raspi31 is building HPL for cpu-tune-clean-flagsearch-flags build

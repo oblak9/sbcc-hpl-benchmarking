@@ -1,0 +1,7 @@
+-march=native
+-mtune=native
+-mcpu=native
+-march=armv8-a+crc
+-mtune=cortex-a72
+-mcpu=cortex-a72
+-mabi=lp64

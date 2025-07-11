@@ -1,0 +1,5 @@
+1|20|atlarch-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -pipe"|-O2|-pipe|877991 
+2|20|atlarch-native-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -march=native -mtune=native -mcpu=native"|-O2|-march=native -mtune=native -mcpu=native|872141 
+5|20|atlarch-all-spec-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"|-O2|-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto|873161 
+11|20|atlarch-cpu-tune-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -mcpu=cortex-a76+crypto -mtune=cortex-a76"|-O2|-mcpu=cortex-a76+crypto -mtune=cortex-a76|872986 
+12|20|cpu-tune-clean-flagsearch-flags|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-O2 -pipe -mtune=native"|-O2|-pipe -mtune=native|877668 

@@ -1,0 +1,18 @@
+1|20|atlarch-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2"|-O1|-pipe -fschedule-insns2|243761 
+2|20|atlarch-tune-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -fno-expensive-optimizations -fschedule-insns2"|-O1|-pipe -fno-schedule-insns -fno-expensive-optimizations -fschedule-insns2|231860 
+3|20|arch-tune-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -funroll-all-loops"|-Os|-pipe -funroll-all-loops|217447 
+4|20|atlarch-tune-spec-crc-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fschedule-insns2 -mtune=native -fexpensive-optimizations"|-Os|-pipe -fschedule-insns2 -mtune=native -fexpensive-optimizations|249047 
+5|20|atlarch-tune-spec-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -fno-expensive-optimizations -fschedule-insns2"|-O1|-pipe -fno-schedule-insns -fno-expensive-optimizations -fschedule-insns2|232195 
+6|20|cpu-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fschedule-insns2 -mtune=native -frename-registers"|-Os|-pipe -fschedule-insns2 -mtune=native -frename-registers|250512 
+7|20|cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fno-expensive-optimizations"|-Os|-pipe -fno-expensive-optimizations|251713 
+8|20|atlarch-cpu-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2"|-O1|-pipe -fschedule-insns2|245070 
+9|20|atlarch-cpu-tune-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fno-schedule-insns -fschedule-insns2 -fno-tree-ter"|-O1|-pipe -fno-schedule-insns -fschedule-insns2 -fno-tree-ter|245968 
+10|20|atlarch-tune-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2"|-O1|-pipe -fschedule-insns2|229366 
+11|20|arch-tune-overr-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fschedule-insns2 -mtune=native -fno-tree-ter"|-Os|-pipe -fschedule-insns2 -mtune=native -fno-tree-ter|246153 
+12|20|atlarch-tune-spec-crc-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2"|-O1|-pipe -fschedule-insns2|231666 
+13|20|atlarch-tune-spec-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2 -fexpensive-optimizations"|-O1|-pipe -fschedule-insns2 -fexpensive-optimizations|234557 
+14|20|cpu-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2 -frename-registers"|-O1|-pipe -fschedule-insns2 -frename-registers|240043 
+15|20|cpu-tune-overr-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fschedule-insns2 -mcpu=cortex-a72 -fno-tree-ter"|-Os|-pipe -fschedule-insns2 -mcpu=cortex-a72 -fno-tree-ter|254645 
+16|20|atlarch-cpu-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2 -fexpensive-optimizations"|-O1|-pipe -fschedule-insns2 -fexpensive-optimizations|234529 
+17|20|atlarch-cpu-tune-overr-flags|-D c -DWALL -b 64  -Fa alg "-O1 -pipe -fschedule-insns2"|-O1|-pipe -fschedule-insns2|235334 
+18|20|generic-flags|-D c -DWALL -b 64  -Fa alg "-Os -pipe -fschedule-insns2 -mtune=native"|-Os|-pipe -fschedule-insns2 -mtune=native|253163 

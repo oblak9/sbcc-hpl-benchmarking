@@ -1,0 +1,6 @@
+-mcpu=native
+-mcpu=cortex-a9
+-march=native
+-mtune=cortex-a9
+-mfloat-abi=hard
+-mfpu=neon-vfpv3

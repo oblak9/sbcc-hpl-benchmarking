@@ -1,0 +1,5 @@
+1|1|small|-D c -DWALL -b 32 -A ARMa7 --force-tids="4 0 1 2 3"||-g0
+2|2|small-atlasarch-tune|-D c -DWALL -b 32 --force-tids="4 0 1 2 3" -Fa alg "-mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"||-g0
+3|3|small-arch-tune|-D c -DWALL -b 32 --force-tids="4 0 1 2 3" -F alg "-march=armv7 -mtune=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"||-g0
+4|4|small-atlasarch-tune2|-D c -DWALL -b 32 -A ARMa7 --force-tids="4 0 1 2 3" -Fa alg "-mtune=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"||-g0
+5|5|small-cpu|-D c -DWALL -b 32 --force-tids="4 0 1 2 3" -Fa alg "-mcpu=cortex-a7 -mfloat-abi=hard -mfpu=neon-vfpv4"||-g0

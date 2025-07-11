@@ -1,0 +1,21 @@
+no_vars_set     linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          553.76     9.7717e+00      2024-09-12 15:37:27 0 0 0               
+no_vars_set     linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          549.48     9.8477e+00      2024-09-12 15:47:03 0 0 0               
+vars_set        linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          420.43     1.2870e+01      2024-09-12 16:01:26 0 0 0               
+vars_set        linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          422.90     1.2795e+01      2024-09-12 16:08:57 0 0 0                          
+vars_set        linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          417.71     1.2954e+01      2024-09-12 20:12:43 0 0 0               
+vars_set        linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          412.49     1.3118e+01      2024-09-12 20:20:04 0 0 0               
+vars_set_and_bind_to    linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          416.98     1.2977e+01      2024-09-12 21:00:39 0 0 0               
+vars_set_and_bind_to    linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          420.08     1.2881e+01      2024-09-12 21:08:08 0 0 0               
+vars_set_and_bind_to    linux_OpenBLAS 2          WR00L2L2   20096    128    1    4          410.69     1.3176e+01      2024-09-12 21:15:28 0 0 0               
+vars_set_and_bind_to    linux_OpenBLAS 3          WR00L2L2   20096    128    1    4          414.91     1.3042e+01      2024-09-12 21:22:51 0 0 0               
+vars_set_and_bind_to    linux_OpenBLAS 4          WR00L2L2   20096    128    1    4          411.10     1.3163e+01      2024-09-12 21:30:11 0 0 0               
+vars_set        linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          412.93     1.3104e+01      2024-09-13 08:15:52 0 0 0               
+vars_set        linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          433.69     1.2477e+01      2024-09-13 08:23:35 0 0 0               
+vars_set        linux_OpenBLAS 2          WR00L2L2   20096    128    1    4          413.39     1.3089e+01      2024-09-13 08:30:57 0 0 0               
+vars_set        linux_OpenBLAS 3          WR00L2L2   20096    128    1    4          428.81     1.2619e+01      2024-09-13 08:38:35 0 0 0               
+vars_set        linux_OpenBLAS 4          WR00L2L2   20096    128    1    4          417.87     1.2949e+01      2024-09-13 08:46:01 0 0 0               
+linux_OpenBLAS 0          WR00L2L2   20096    128    1    4          545.16     9.9257e+00      2024-09-13 09:30:25 0 0 0               
+linux_OpenBLAS 1          WR00L2L2   20096    128    1    4          546.58     9.8999e+00      2024-09-13 09:39:59 0 0 0               
+linux_OpenBLAS 2          WR00L2L2   20096    128    1    4          546.00     9.9104e+00      2024-09-13 09:49:33 0 0 0               
+linux_OpenBLAS 3          WR00L2L2   20096    128    1    4          546.50     9.9013e+00      2024-09-13 09:59:07 0 0 0               
+linux_OpenBLAS 4          WR00L2L2   20096    128    1    4          544.82     9.9318e+00      2024-09-13 10:08:39 0 0 0               

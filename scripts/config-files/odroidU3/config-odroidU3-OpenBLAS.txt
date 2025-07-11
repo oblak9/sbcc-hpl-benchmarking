@@ -1,0 +1,55 @@
+PLATFORM=odroidU3
+CENTRAL_STORAGE=$USER@hp01:$HOME
+ATLAS_STORAGE=atlas-builds/$PLATFORM
+SCRIPTS_DIR=$HOME/clustershared/scripts
+BUILD_INFO=$SCRIPTS_DIR/atlas_build/builds_info_$PLATFORM-flags.txt
+LOG_FILE=$HOME/clustershared/hpl-results/log.txt
+WAIT_DIR=$HOME/wait-files
+MASTER_DEVICE=odroid01
+NUM_OF_NODES=4
+ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
+ATLAS_EXTRA_FLAGS="-Fa alg"
+
+################
+#HPL BUILD
+################
+HPL_DIR=$HOME/hpl-2.3
+HPL_DIR_OPENBLAS=$HOME/hpl-2.3                              # $HOME/local/hpl-2.3
+HPL_EXCHANGE_BINARIES=0             # sometimes not all nodes build HPL binaries and have to be exchanged after building, then set to 1
+
+################
+#THROTTLING
+################
+MONITOR_THROTTLING_CPU=cpu0
+HPL_GENERIC_MAKEFILE=$SCRIPTS_DIR/hpl_build/Make.generic
+
+################
+#FLAGSEARCH_DIR
+################
+FLAGSEARCH_DIR=$SCRIPTS_DIR/flagsearch
+OPTIMIZATION_FLAGS_FILE=$FLAGSEARCH_DIR/optimization-flags-$PLATFORM.txt
+
+################
+#BIG_LITTLE
+################
+CORE_TYPE="" #"big" for big cores, "small" for small cores, "" for not a big.LITTLE arch
+ATLAS_TIDS=''
+TASKSET=""
+SPECIAL_FLAGS=""
+
+################
+#HPL RUN
+################
+MPIEXEC_BIND_TO="--bind-to core"                       # Can make a huge difference ("--bind-to core" vs. none on RPi4B makes a huge difference in HPL (in OpenBLAS))
+BLAS_IMPL="OpenBLAS"                                   # "ATLAS" or "OpenBLAS"
+WARMUP="no"                                         # do a single HPL run that doesn't go into results
+BUILD_RUN="no"                                     # "no" for parameter run "yes" for builds run
+TOP_BUILDs="linux_OpenBLAS"                                        # set if parameter run, unset if build run (linux_OpenBLAS for OpenBLAS, cpu-tune-overr-flags for ATLAS)
+CORES_PER_NODE=4
+HOSTFILE=$HOME/hostsOU3
+RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-$BLAS_IMPL-params"   #change if parameter run (suffix "-builds")
+RESULTSFILE="$RESULTSDIR/results.txt"
+RUNs="0 1 2 3 4"                                    # number of experiment repetitions
+Ns="25728 27264 28800"                              # "25728 27264 28800" (4 node) #"12864 13632 14400" (1 node) #change if parameter run (25728 for builds)
+NBs="32 64 96 128 160 192 224 256"                  # "32 64 96 128 160 192 224 256"  #change if parameter run (128 for builds)
+Ps="1 2 4"                                            # "1 2 4"                        #change if parameter run (2 for builds)

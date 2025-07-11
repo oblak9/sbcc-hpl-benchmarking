@@ -1,0 +1,10 @@
+-march=native
+-mtune=native
+-mcpu=native
+-march=armv8.2-a+crypto+fp16+rcpc+dotprod
+-mtune=cortex-a76
+-mcpu=cortex-a76+crypto
+-mcpu=cortex-a76+crc+crypto
+-mabi=lp64
+-march=armv8.2-a
+-mlittle-endian
