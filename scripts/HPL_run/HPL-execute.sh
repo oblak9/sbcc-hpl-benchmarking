@@ -55,13 +55,15 @@ declare -A existingMeasurements
 
 # Function to read existing measurements
 read_existing_measurements() {
-    while read -r line; do
-        # Read the elements from the line with an extra column for build_name
-        read -r build_name run _ nround nb p _ <<<"$line"
+    if [ -f "$RESULTSFILE" ]; then
+        while read -r line; do
+            # Read the elements from the line with an extra column for build_name
+            read -r build_name run _ nround nb p _ <<<"$line"
 
-        # Store the elements in the associative array using build_name as part of the key
-        existingMeasurements["$build_name,$run,$nround,$nb,$p"]=1¸
-    done < "$RESULTSFILE"
+            # Store the elements in the associative array using build_name as part of the key
+            existingMeasurements["$build_name,$run,$nround,$nb,$p"]=1¸
+        done < "$RESULTSFILE"
+    fi
 }
 
 
