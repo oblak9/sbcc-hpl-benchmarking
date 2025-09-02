@@ -54,6 +54,12 @@ fi
 CONFIG_FILE=$1
 source "$CONFIG_FILE" || { echo "Error: Failed to source configuration file."; exit 1; }
 
+# Add a new variable to capture the MPICH directory from the config file
+MPICH_DIR=${MPICH_DIR:-"$HOME/mpich-install"}
+
+# Add a new variable to capture the HPL directory from the config file
+HPL_DIR=${HPL_DIR:-"$HOME/hpl-2.3"}
+
 # Determine node numbers based on the hostname and master device
 current_hostname=$(hostname)
 
@@ -81,7 +87,7 @@ process_build() {
 
   # Check if the node has the specific ATLAS build
   if [[ ! -f "$HOME/atlas-$build_name/lib/libcblas.a" || ! -f "$HOME/atlas-$build_name/lib/libatlas.a" ]]; then
-    echo "Error: Required libraries not built for $build_name, skipping." >> $LOG_FILE
+    echo "Error: Required libraries not built for $build_name, skipping." >> "$LOG_FILE"
     return
   fi
 
@@ -95,8 +101,14 @@ process_build() {
   sed -i "s/buildname/$build_name/g" "Make.$build_name"
   sed -i "s/gccflags/$build_opt_flags $build_flags/g" "Make.$build_name"
 
+  # Update the CC line to use the MPICH directory from the config file
+  sed -i "s|^CC *=.*|CC = $MPICH_DIR/bin/mpicc|g" "Make.$build_name"
+
+  # Update the TOPdir line to use the HPL directory from the config file
+  sed -i "s|^TOPdir *=.*|TOPdir = $HPL_DIR|g" "Make.$build_name"
+
   # Build the project
-  echo "$(hostname) is building HPL for $build_name build" >> $LOG_FILE
+  echo "$(hostname) is building HPL for $build_name build" >> "$LOG_FILE"
   make arch="$build_name" -B
 }
 

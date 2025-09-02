@@ -11,7 +11,12 @@ ATLAS_CORE_FLAGS="-D c -DWALL -b 64"
 ATLAS_EXTRA_FLAGS="-Fa alg"
 
 ################
-#HPL BUILD
+#MPICH
+################
+MPICH_DIR=/opt/mpich-ch4-ofi
+
+################
+#HPL INFO
 ################
 HPL_DIR=$HOME/hpl-2.3
 HPL_DIR_OPENBLAS=$HOME/hpl-2.3                              # $HOME/local/hpl-2.3

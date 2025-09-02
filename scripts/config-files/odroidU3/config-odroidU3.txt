@@ -11,11 +11,16 @@ ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-Fa alg"
 
 ################
-#HPL BUILD
+#HPL INFO
 ################
 HPL_DIR=$HOME/hpl-2.3
 HPL_DIR_OPENBLAS=$HOME/hpl-2.3                              # $HOME/local/hpl-2.3
 HPL_EXCHANGE_BINARIES=0             # sometimes not all nodes build HPL binaries and have to be exchanged after building, then set to 1
+
+################
+#MPICH INFO
+################
+MPICH_DIR=/opt/mpich-ch4-ofi
 
 ################
 #THROTTLING
