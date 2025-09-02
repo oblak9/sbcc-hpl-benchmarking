@@ -1,3 +1,10 @@
+# Source the base configuration
+source $HOME/clustershared/scripts/config-files/base-config.txt
+
+# Platform-Specific Configuration File for cubie
+# This file overrides the variables defined in the base-config.txt.
+# For detailed documentation, refer to the base-config.txt.
+
 PLATFORM=cubie
 CENTRAL_STORAGE=$USER@hp01:$HOME
 ATLAS_STORAGE=atlas-builds/$PLATFORM
@@ -9,6 +16,14 @@ MASTER_DEVICE=cubie01
 NUM_OF_NODES=4
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-Fa alg"
+
+################
+# HPL PARAMETERS
+################
+Ns="18368"                              # "18368 19456 20544" (4 node) #"9216 9728 10240" (1 node) #change if parameter run (18368 for builds)
+NBs="64"                  # "32 64 96 128 160 192 224 256"  #change if parameter run (64 for builds)
+Ps="2"                                              # "1 2"                        #change if parameter run (2 for builds)
+RUNs="0 1 2 3 4"                                    # number of experiment repetitions
 
 ################
 #HPL INFO
@@ -53,7 +68,3 @@ CORES_PER_NODE=2
 HOSTFILE=$HOME/hostsCubie
 RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-$BLAS_IMPL-builds"   #change if parameter run (suffix "-builds")
 RESULTSFILE="$RESULTSDIR/results.txt"
-RUNs="0 1 2 3 4"                                    # number of experiment repetitions
-Ns="18368"                              # "18368 19456 20544" (4 node) #"9216 9728 10240" (1 node) #change if parameter run (18368 for builds)
-NBs="64"                  # "32 64 96 128 160 192 224 256"  #change if parameter run (64 for builds)
-Ps="2"                                              # "1 2"                        #change if parameter run (2 for builds)

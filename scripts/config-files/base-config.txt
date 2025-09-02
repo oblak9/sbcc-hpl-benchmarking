@@ -1,0 +1,69 @@
+# Base Configuration File
+# This file contains all the shared variables and detailed documentation for the HPL benchmarking setup.
+# Platform-specific configuration files should override only the variables that differ from these defaults.
+
+PLATFORM=default
+CENTRAL_STORAGE=$USER@hp01:$HOME                                        # Not used, 
+ATLAS_STORAGE=atlas-builds/$PLATFORM
+SCRIPTS_DIR=$HOME/clustershared/scripts                                 # Location of the main scripts.
+BUILD_INFO=$SCRIPTS_DIR/atlas_build/builds_info_$PLATFORM-flags.txt     # File containing the list of ATLAS builds (when building multiple ATLASes, or when running HPL for multiple ATLAS builds.
+LOG_FILE=$HOME/clustershared/hpl-results/log.txt                        # Log file that records the steps in the process.
+WAIT_DIR=$HOME/wait-files                                               # Location to store files used for signalling completion on certain tasks.
+ATLAS_CORE_FLAGS=""                                                     # Was used while testing.
+ATLAS_EXTRA_FLAGS=""                                                    # Was used while testing.
+
+################
+# HPL PARAMETERS
+# Single value or multiple values spearated with space can be entered
+################
+Ns="52000"                                                # HPL N (e.g. "52000 55200 58400")
+NBs="160"                                                 # HPL NB (e.g. "32 64 96 128 160 192 224 256" for parameter runs; "160" for builds)
+Ps="2"                                                    # HPL P (Q is calculated) (e.g. "1 2 4" for parameter runs; "2" for builds)
+RUNs="0 1 2 3 4"                                          # Number(s) of experiment repetitions
+
+################
+# MPICH INFO
+################
+MPICH_DIR=/opt/mpich-ch4-ofi
+
+################
+# HPL INFO
+################
+HPL_DIR=$HOME/hpl-2.3                                       # HPL install location
+HPL_EXCHANGE_BINARIES=0                                     # sometimes not all nodes build HPL binaries and have to be exchanged after building, then set to 1
+
+################
+# THROTTLING
+################
+MONITOR_THROTTLING_CPU=cpu0                                 # The ID of a CPU from which the throttling information will be collected
+HPL_GENERIC_MAKEFILE=$SCRIPTS_DIR/hpl_build/Make.generic    # The location of the base HPL makefile, upon which the neccessary changes will be done
+
+################
+# FLAGSEARCH_DIR
+################
+FLAGSEARCH_DIR=$SCRIPTS_DIR/flagsearch                                      # (ATLAS only) Location of the flagsearch-related files
+OPTIMIZATION_FLAGS_FILE=$FLAGSEARCH_DIR/optimization-flags-$PLATFORM.txt    # (ATLAS only) File in which the flagsearched builds are stored 
+
+################
+# BIG_LITTLE
+# Only for architectures employing big.LITTLE (e.g. Odroid MC1)
+################
+CORE_TYPE=""                            # "big" for using only big cores, "small" for using only small cores, empty for not a big.LITTLE arch
+ATLAS_TIDS=''                           # the amount and a list of CPU core IDs that will be used (e.g. --force-tids="4 4 5 6 7" which means 4 cores, and then IDs). ATLAS setting.
+TASKSET=""                              # similar to ATLAS_TIDS (only the core IDs), only for running the flagsearch on specific cores. Linux setting. E.g. taskset -c 4,5,6,7
+SPECIAL_FLAGS=""                        # similar to the two above, only for running mpiexec (HPL) - selecting the exact cores to run the HPL on. E.g. -bind-to user:4,5,6,7
+
+################
+# HPL RUN
+################
+MPIEXEC_BIND_TO=""                      # gives better results on some newer architectures (e.g. Raspberry Pi 4B, set value to --bind-to core)
+BLAS_IMPL="ATLAS"                       # BLAS implementation used, "ATLAS" or "OpenBLAS"
+WARMUP="no"                             # For temperature- and stability-related measurements, running a warmup session before recording actual results.
+BUILD_RUN="no"                          # Whether running HPL for different ATLAS builds ("yes"), or running HPL with different sets of HPL parameters ("no").
+TOP_BUILDs=""                           # Build names that will be used to run the HPL (all the params will be ran on all the builds defined here). "linux_OpenBLAS" for OpenBLAS.
+MASTER_DEVICE=default-master            # The main worker node (has to be overriden by the platform specific config files)
+HOSTFILE=$HOME/hostfile                 # MPI hostfile (for running HPL via mpiexec, has to be overriden by the platform specific config files)
+NUM_OF_NODES=1                          # Number of nodes for a HPL run.
+CORES_PER_NODE=4                        
+RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-$BLAS_IMPL-params"
+RESULTSFILE="$RESULTSDIR/results.txt"

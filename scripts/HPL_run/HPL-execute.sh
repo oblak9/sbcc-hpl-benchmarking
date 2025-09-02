@@ -220,9 +220,9 @@ main() {
 
     for BUILD_NAME in "${BUILDS[@]}"; do
         if [ "$BLAS_IMPL" = "OpenBLAS" ]; then
-            HPL_PATH="$HPL_DIR_OPENBLAS/bin/linux_OpenBLAS"
+            HPL_PATH="$HPL_DIR/bin/linux_OpenBLAS"
         else
-            HPL_PATH="$HPL_DIR/bin/$BUILD_NAME"
+            HPL_PATH="/bin/$BUILD_NAME"
         fi
 
         mkdir -p "$RESULTSDIR/$BUILD_NAME"

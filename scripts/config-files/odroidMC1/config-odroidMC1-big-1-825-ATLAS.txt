@@ -1,4 +1,4 @@
-PLATFORM=odroidMC1-big
+PLATFORM=odroidMC1-big-825
 CENTRAL_STORAGE=$USER@hp01:$HOME
 ATLAS_STORAGE=atlas-builds/$PLATFORM
 SCRIPTS_DIR=$HOME/clustershared/scripts
