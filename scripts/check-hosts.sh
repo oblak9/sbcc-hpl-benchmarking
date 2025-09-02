@@ -15,7 +15,7 @@ BASE_NAME=$(echo $BASE_HOSTNAME | sed 's/[0-9]*$//')
 START_NUM=$(echo $BASE_HOSTNAME | sed 's/[^0-9]*//')
 
 # File path for logging
-LOG_FILE="/home/zdravak/odroidMC1.log"
+LOG_FILE="$HOME/$BASE_NAME.log"
 
 # Initialize a counter for alive hosts
 ALIVE_HOSTS=0

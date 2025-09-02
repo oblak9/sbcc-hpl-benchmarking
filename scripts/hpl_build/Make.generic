@@ -168,7 +168,7 @@ HPL_DEFS     = $(F2CDEFS) $(HPL_OPTS) $(HPL_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-CC       = /home/zdravak/mpich-install/bin/mpicc
+CC       = $(HOME)/mpich-install/bin/mpicc
 CCNOOPT  = $(HPL_DEFS)
 CCFLAGS  = $(HPL_DEFS) gccflags
 #
