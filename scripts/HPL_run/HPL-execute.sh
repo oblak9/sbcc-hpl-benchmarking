@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Ensure the script is using Unix-style line endings
+if grep -q $'\r' "$0"; then
+    echo "Error: Script contains Windows-style line endings. Please convert to Unix-style line endings."
+    exit 1
+fi
+
 # Function to check parameters
 check_parameters() {
     if [ "$#" -lt 1 ]; then

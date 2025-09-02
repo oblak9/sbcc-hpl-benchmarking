@@ -52,7 +52,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 CONFIG_FILE=$1
-source $CONFIG_FILE
+source "$CONFIG_FILE" || { echo "Error: Failed to source configuration file."; exit 1; }
 
 # Determine node numbers based on the hostname and master device
 current_hostname=$(hostname)

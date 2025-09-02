@@ -16,7 +16,7 @@ check_config_file() {
     echo "Error: Config file '$CONFIG_FILE' not found."
     exit 1
   fi
-  source $CONFIG_FILE
+  source "$CONFIG_FILE" || { echo "Error: Failed to source config file."; exit 1; }
 }
 
 # Function to create an array of devices
@@ -31,8 +31,8 @@ create_devices_array() {
 
 # Function to clean the old wait directory
 clean_wait_dir() {
-  rm -rf $WAIT_DIR
-  mkdir -p $WAIT_DIR
+  rm -rf "$WAIT_DIR"
+  mkdir -p "$WAIT_DIR"
 }
 
 # Function to run atlas builds on all nodes and wait for completion
@@ -41,13 +41,13 @@ run_and_wait_atlas_builds() {
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
-    echo "Starting atlas builds on $current_host" >> $LOG_FILE
-    ssh $current_host "tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'" &
+    echo "Starting atlas builds on $current_host" >> "$LOG_FILE"
+    ssh "$current_host" "tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'" &
   done
 
   # Run build command on the master node directly
-  echo "Starting atlas builds on $HOSTNAME" >> $LOG_FILE
-  eval "$atlasbuildcommand && touch $WAIT_DIR/atlas-${HOSTNAME}-done.txt"
+  echo "Starting atlas builds on $HOSTNAME" >> "$LOG_FILE"
+  eval "$atlasbuildcommand && touch \"$WAIT_DIR/atlas-${HOSTNAME}-done.txt\""
 
   # Wait for all nodes to finish by checking their done files
   waitcommand="$SCRIPTS_DIR/wait/waitScript.sh"
@@ -60,7 +60,7 @@ run_and_wait_atlas_builds() {
 # Function to collect atlas builds from all devices
 collect_atlas_builds() {
   for current_host in "${DEVICES[@]:1}"; do
-    scp -r $USER@$current_host:$HOME/atlas-* $HOME
+    scp -r "$USER@$current_host:$HOME/atlas-*" "$HOME"
   done
 }
 
@@ -68,13 +68,11 @@ collect_atlas_builds() {
 distribute_atlas_builds() {
   local atlas_builds
   # Find only directories in the $HOME directory that match atlas-*
-  atlas_builds=$(find $HOME -maxdepth 1 -type d -name "atlas-*")
+  atlas_builds=$(find "$HOME" -maxdepth 1 -type d -name "atlas-*")
 
   for current_host in "${DEVICES[@]:1}"; do
     for build in $atlas_builds; do
       echo "$build on host $current_host"
-      # Check if the directory already exists on the node
-      # No need to escape $build inside ssh command, just use single quotes for remote command
       if ssh "$current_host" "test -d \"$HOME/$(basename "$build")\""; then
         echo "Skipping $build on $current_host, already exists."
       else
@@ -91,14 +89,13 @@ run_and_wait_hpl_makefiles() {
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
-    echo "Running hpl makefiles creation on $current_host" >> $LOG_FILE
-    # Run build command on remote nodes
-    ssh $current_host "tmux new-session -d -s 'hplsetup' -- '$hplbuildcommand'" &
+    echo "Running hpl makefiles creation on $current_host" >> "$LOG_FILE"
+    ssh "$current_host" "tmux new-session -d -s 'hplsetup' -- '$hplbuildcommand'" &
   done
 
   # Run build command on the master node directly
-  echo "Running hpl makefiles creation on $HOSTNAME" >> $LOG_FILE
-  eval "$hplbuildcommand && touch $WAIT_DIR/hpl-${HOSTNAME}-done.txt"
+  echo "Running hpl makefiles creation on $HOSTNAME" >> "$LOG_FILE"
+  eval "$hplbuildcommand && touch \"$WAIT_DIR/hpl-${HOSTNAME}-done.txt\""
 
   # Wait for all nodes to finish
   waitcommand="$SCRIPTS_DIR/wait/waitScript.sh"

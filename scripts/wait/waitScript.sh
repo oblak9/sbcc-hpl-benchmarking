@@ -11,6 +11,10 @@ wait_for_file() {
 
 # Main script to wait for all files
 for file in "$@"; do
+  if [ -z "$file" ]; then
+    echo "Error: Empty file path provided."
+    exit 1
+  fi
   wait_for_file "$file"
 done
 
