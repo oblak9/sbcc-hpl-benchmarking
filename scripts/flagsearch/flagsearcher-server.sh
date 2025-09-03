@@ -117,7 +117,7 @@ send_build_file_to_clients() {
 
 # Function to run executor
 run_executor() {
-  $SCRIPTS_DIR/wait/executor.sh $SCRIPTS_DIR/builds_info_flags.txt
+  $SCRIPTS_DIR/wait/executor.sh $SCRIPTS_DIR/builds_info/builds_info_flags.txt
 }
 
 # Main function to orchestrate the script execution
@@ -256,4 +256,4 @@ main "$@"
 # done
 
 # #RUN EXECUTOR
-# #$SCRIPTS_DIR/wait/executor.sh $SCRIPTS_DIR/builds_info_flags.txt
+# #$SCRIPTS_DIR/wait/executor.sh $SCRIPTS_DIR/builds_info/builds_info_flags.txt

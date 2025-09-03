@@ -1,5 +1,5 @@
-#/bin/sh
-BUILDS_INFO="$HOME/scripts/builds_info.txt"
+#!/bin/sh
+BUILDS_INFO="$HOME/scripts/builds_info/builds_info.txt"
 while read line; do
 BUILD_NUMBER=$(echo $line | cut -d "|" -f 1)
 BUILD_NUMBER2=$(echo $line | cut -d "|" -f 2)
