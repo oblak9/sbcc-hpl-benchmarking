@@ -15,7 +15,7 @@ ATLAS_EXTRA_FLAGS="-Fa alg"
 Ns="52000"                                                # "52000 55200 58400" for builds; "26048 27584 29120" for single node
 NBs="160"                                                 # "32 64 96 128 160 192 224 256" for parameter runs; "160" for builds
 Ps="2"                                                    # "1 2 4" for parameter runs; "2" for builds
-RUNs="0 1 2 3 4"                                          # Number of experiment repetitions
+RUNs="0 1 2 3 4"
 
 ################
 # HPL RUN
@@ -23,8 +23,8 @@ RUNs="0 1 2 3 4"                                          # Number of experiment
 MPIEXEC_BIND_TO="--bind-to core"
 BLAS_IMPL="ATLAS"
 WARMUP="no"
-BUILD_RUN="yes"
-TOP_BUILDs=""
+BUILD_RUN="no"
+TOP_BUILDs="atlarch-all-spec"
 MASTER_DEVICE=raspi31
 HOSTFILE=$HOME/hostsRPi5B
 NUM_OF_NODES=4

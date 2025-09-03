@@ -7,15 +7,15 @@ source $HOME/clustershared/scripts/config-files/base-config.txt
 
 PLATFORM=raspi4B
 ATLAS_CORE_FLAGS="-D c -DWALL -b 64"
-ATLAS_EXTRA_FLAGS="-F alg"
+ATLAS_EXTRA_FLAGS="-Fa alg"
 
 ################
 # HPL PARAMETERS
 ################
-Ns="36000"                                                # "36000 38080 40160" for builds; "17984 19072 20160" for single node
+Ns="36000"                                                # "36000 38080 40160" for builds; "17984 19072 20160" for single node; 36000 for builds
 NBs="160"                                                 # "32 64 96 128 160 192 224 256" for parameter runs; "160" for builds
 Ps="2"                                                    # "1 2 4" for parameter runs; "2" for builds
-RUNs="0 1 2 3 4"                                          # Number of experiment repetitions
+RUNs="0 1 2 3 4"
 
 ################
 # HPL RUN
@@ -23,8 +23,8 @@ RUNs="0 1 2 3 4"                                          # Number of experiment
 MPIEXEC_BIND_TO="--bind-to core"
 BLAS_IMPL="ATLAS"
 WARMUP="no"
-BUILD_RUN="yes"
-TOP_BUILDs=""
+BUILD_RUN="no"
+TOP_BUILDs="cpu-tune-overr-flags"
 MASTER_DEVICE=raspi21
 HOSTFILE=$HOME/hostsRPi4B
 NUM_OF_NODES=4

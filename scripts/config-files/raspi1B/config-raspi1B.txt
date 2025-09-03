@@ -1,6 +1,10 @@
 # Source the base configuration
 source $HOME/clustershared/scripts/config-files/base-config.txt
 
+# Platform-Specific Configuration File for raspi1B
+# This file overrides the variables defined in the base-config.txt.
+# For detailed documentation, refer to the base-config.txt.
+
 PLATFORM=raspi1B
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-Fa alg"
@@ -8,10 +12,10 @@ ATLAS_EXTRA_FLAGS="-Fa alg"
 ################
 # HPL PARAMETERS
 ################
-Ns="12672 13440 14208"                                    # "12672 13440 14208" for builds; "6336 6720 7104" for single node
-NBs="32 64 96 128 160 192 224 256"                        # "160 192 128 96 224 256" for parameter runs; "128" for builds
-Ps="1 2"                                                  # "1 2 4" for parameter runs; "2" for builds
-RUNs="0 1 2 3 4"                                          # Number of experiment repetitions
+Ns="12672 13440 14208"                                    # "12672 13440 14208" for builds; "6336 6720 7104" for single node; 12672 for builds
+NBs="32 64 96 128 160 192 224 256"                        # "32 64 96 128 160 192 224 256" for parameter runs; "64" for builds
+Ps="1 2"                                                  # "1 2" for parameter runs; "1" for builds
+RUNs="0 1 2 3 4"
 
 ################
 # HPL RUN

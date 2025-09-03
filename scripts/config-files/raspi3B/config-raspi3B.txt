@@ -12,10 +12,10 @@ ATLAS_EXTRA_FLAGS="-Fa alg"
 ################
 # HPL PARAMETERS
 ################
-Ns="19584"                                                # "17536 18560 19584" for builds; "8768 9280 9792" for single node
+Ns="19584"                                                # "17536 18560 19584" for builds; "8768 9280 9792" for single node; 17536 for builds
 NBs="256"                                                 # "32 64 96 128 160 192 224 256" for parameter runs; "128" for builds
 Ps="1 2 4"                                                # "1 2 4" for parameter runs; "2" for builds
-RUNs="0 1 2 3 4"                                          # Number of experiment repetitions
+RUNs="0 1 2 3 4"
 
 ################
 # HPL RUN

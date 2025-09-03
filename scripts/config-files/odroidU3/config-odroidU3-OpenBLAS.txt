@@ -1,6 +1,10 @@
 # Source the base configuration
 source $HOME/clustershared/scripts/config-files/base-config.txt
 
+# Platform-Specific Configuration File for odroidU3 (OpenBLAS)
+# This file overrides the variables defined in the base-config.txt.
+# For detailed documentation, refer to the base-config.txt.
+
 PLATFORM=odroidU3
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-Fa alg"
