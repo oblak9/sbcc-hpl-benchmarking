@@ -5,7 +5,7 @@ source $HOME/clustershared/scripts/config-files/base-config.txt
 # This file overrides the variables defined in the base-config.txt.
 # For detailed documentation, refer to the base-config.txt.
 
-PLATFORM=odroidMC1-small
+PLATFORM=odroidMC1-small-825
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-Fa alg"
 
@@ -28,11 +28,11 @@ SPECIAL_FLAGS="-bind-to user:0,1,2,3"
 ################
 #HPL RUN
 ################
-MPIEXEC_BIND_TO=""                       # Can make a huge difference ("--bind-to core" vs. none on RPi4B makes a huge difference in HPL (in OpenBLAS))
-BLAS_IMPL="ATLAS"                                   # "ATLAS" or "OpenBLAS"
-WARMUP="no"                                            # do a single HPL run that doesn't go into results
-BUILD_RUN="no"                                         # "no" for parameter run "yes" for builds run
-TOP_BUILDs="small"                                      # set if parameter run, unset if build run (linux_OpenBLAS for OpenBLAS, small for ATLAS)
+MPIEXEC_BIND_TO=""
+BLAS_IMPL="ATLAS"
+WARMUP="no"
+BUILD_RUN="no"
+TOP_BUILDs="small"
 MASTER_DEVICE=odroid10
 HOSTFILE=$HOME/hostsMC1
 NUM_OF_NODES=4

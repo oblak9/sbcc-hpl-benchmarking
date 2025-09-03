@@ -5,14 +5,14 @@ source $HOME/clustershared/scripts/config-files/base-config.txt
 # This file overrides the variables defined in the base-config.txt.
 # For detailed documentation, refer to the base-config.txt.
 
-PLATFORM=raspi5B
+PLATFORM=odroidMC1-big-825
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
 ATLAS_EXTRA_FLAGS="-m 2000 -Fa alg"
 
 ################
 # HPL PARAMETERS
 ################
-Ns="52000"                                                # #"27520 25984 29056"/"13056 13824 14592" (25984 for builds)
+Ns="25984"                                                # #"27520 25984 29056"/"13056 13824 14592" (25984 for builds)
 NBs="160"                                                 # "32 64 96 128 160 192 224 256" for parameter runs; "160" for builds
 Ps="2"                                                    # "1 2 4" for parameter runs; "2" for builds
 RUNs="0 1 2 3 4"
@@ -34,10 +34,10 @@ SPECIAL_FLAGS="-bind-to user:4,5,6,7"
 # HPL RUN
 ################
 MPIEXEC_BIND_TO=""
-BLAS_IMPL="ATLAS"
+BLAS_IMPL="OpenBLAS"
 WARMUP="no"
 BUILD_RUN="no"
-TOP_BUILDs="big"
+TOP_BUILDs="linux_OpenBLAS"
 MASTER_DEVICE=odroid10
 HOSTFILE=$HOME/hostsMC1
 NUM_OF_NODES=4
