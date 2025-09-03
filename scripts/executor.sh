@@ -116,6 +116,9 @@ main() {
   check_config_file "$1"
   create_devices_array
 
+  # Ensure the log file exists
+  touch "$LOG_FILE"
+
   echo "Select steps to execute:"
   echo "1. Clean wait directory"
   echo "2. Run atlas builds and wait for completion"
