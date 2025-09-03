@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)                             # Dynamic location of the main scripts.
+
 # Function to check the number of parameters
 check_params() {
   if [ "$#" -ne 1 ]; then
@@ -9,14 +11,24 @@ check_params() {
   fi
 }
 
-# Function to check if the config file exists
-check_config_file() {
-  CONFIG_FILE=$1
-  if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Error: Config file '$CONFIG_FILE' not found."
+# Function to load and export configuration files
+load_config_file() {
+  local config_file=$1
+  if [ ! -f "$config_file" ]; then
+    echo "Error: Config file '$config_file' not found."
     exit 1
   fi
-  source "$CONFIG_FILE" || { echo "Error: Failed to source config file."; exit 1; }
+
+  # Read the config file line by line
+  while IFS= read -r line || [ -n "$line" ]; do
+    # Skip comments and empty lines
+    [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+    # Evaluate valid variable assignments
+    eval "$line"
+    # Export the variable to make it available to child scripts
+    var_name=$(echo "$line" | cut -d'=' -f1)
+    export "$var_name"
+  done < "$config_file"
 }
 
 # Function to create an array of devices
@@ -37,7 +49,7 @@ clean_wait_dir() {
 
 # Function to run atlas builds on all nodes and wait for completion
 run_and_wait_atlas_builds() {
-  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh $CONFIG_FILE"
+  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
@@ -85,7 +97,7 @@ distribute_atlas_builds() {
 
 # Function to run HPL makefile creation and wait for completion
 run_and_wait_hpl_makefiles() {
-  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh $CONFIG_FILE"
+  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
@@ -107,17 +119,27 @@ run_and_wait_hpl_makefiles() {
 
 # Function to run HPL execution
 run_hpl_execution() {
-  "$SCRIPTS_DIR/HPL_run/HPL-execute.sh" "$CONFIG_FILE"
+  "$SCRIPTS_DIR/HPL_run/HPL-execute.sh"
 }
 
 # Main function to execute selected steps
 main() {
   check_params "$@"
-  check_config_file "$1"
-  create_devices_array
+  config_file="$1"
+  base_config="${SCRIPTS_DIR}/config-files/base-config.txt" # Use the second parameter or default to the hardcoded path
 
   # Ensure the log file exists
   touch "$LOG_FILE"
+
+  # Load the base configuration
+  echo "Loading base configuration from $base_config..." >> "$LOG_FILE"
+  load_config_file "$base_config"
+
+  # Load the platform-specific configuration
+  echo "Loading platform-specific configuration from $config_file..." >> "$LOG_FILE"
+  load_config_file "$config_file"
+
+  create_devices_array
 
   echo "Select steps to execute:"
   echo "1. Clean wait directory"

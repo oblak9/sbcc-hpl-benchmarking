@@ -44,16 +44,6 @@
 #   Adjust the path "/path/to/atlas/build/" to the correct path where the ATLAS builds
 #   are located on each node.
 
-# Check if a configuration file parameter has been provided
-if [ "$#" -ne 1 ]; then
-  echo "Error: You must provide exactly one parameter."
-  echo "Usage: $0 <config-file>"
-  exit 1
-fi
-
-CONFIG_FILE=$1
-source "$CONFIG_FILE" || { echo "Error: Failed to source configuration file."; exit 1; }
-
 # Add a new variable to capture the MPICH directory from the config file
 MPICH_DIR=${MPICH_DIR:-"$HOME/mpich-install"}
 

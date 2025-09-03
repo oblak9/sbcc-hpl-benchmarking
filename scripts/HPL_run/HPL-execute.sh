@@ -6,29 +6,6 @@ if grep -q $'\r' "$0"; then
     exit 1
 fi
 
-# Function to check parameters
-check_parameters() {
-    if [ "$#" -lt 1 ]; then
-        echo "Error: You must provide a configuration file."
-        echo "Usage: $0 <config-file> [extra-column]"
-        exit 1
-    fi
-}
-
-# Function to source the configuration file
-source_config() {
-    CONFIG_FILE=$1
-    source "$CONFIG_FILE"
-
-    # the next part is adding a special column in the results (after #RUN column)
-    # to differentiate results in the table if necessary
-    if [ -z "$2" ]; then
-        HPL_DAT_EXTRA_COLUMN=""
-    else
-        HPL_DAT_EXTRA_COLUMN="-$2"
-    fi
-}
-
 # Function to initialize variables
 initialize_variables() {
     (( NUM_PROCESSES = NUM_OF_NODES * CORES_PER_NODE ))
@@ -213,8 +190,6 @@ extract_and_format_result_line() {
 
 # Main function
 main() {
-    check_parameters "$@"
-    source_config "$@"
     initialize_variables
     read_existing_measurements
 

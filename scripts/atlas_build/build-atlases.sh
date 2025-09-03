@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Source the configuration file (assumed to be validated by the caller script)
-source "$CONFIG_FILE" || { echo "Error: Failed to source configuration file."; exit 1; }
-
 CONFIGURE="$HOME/ATLAS/configure"
 NUM_OF_BUILDS=$(grep -v '^$' "$BUILD_INFO" | wc -l)
 
