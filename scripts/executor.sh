@@ -128,9 +128,6 @@ main() {
   config_file="$1"
   base_config="${SCRIPTS_DIR}/config-files/base-config.txt" # Use the second parameter or default to the hardcoded path
 
-  # Ensure the log file exists
-  touch "$LOG_FILE"
-
   # Load the base configuration
   echo "Loading base configuration from $base_config..." >> "$LOG_FILE"
   load_config_file "$base_config"
@@ -138,6 +135,9 @@ main() {
   # Load the platform-specific configuration
   echo "Loading platform-specific configuration from $config_file..." >> "$LOG_FILE"
   load_config_file "$config_file"
+
+  # Ensure the log file exists
+  touch "$LOG_FILE"
 
   create_devices_array
 
