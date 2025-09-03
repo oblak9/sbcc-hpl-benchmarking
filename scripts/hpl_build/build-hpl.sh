@@ -44,12 +44,6 @@
 #   Adjust the path "/path/to/atlas/build/" to the correct path where the ATLAS builds
 #   are located on each node.
 
-# Add a new variable to capture the MPICH directory from the config file
-MPICH_DIR=${MPICH_DIR:-"$HOME/mpich-install"}
-
-# Add a new variable to capture the HPL directory from the config file
-HPL_DIR=${HPL_DIR:-"$HOME/hpl-2.3"}
-
 # Determine node numbers based on the hostname and master device
 current_hostname=$(hostname)
 
