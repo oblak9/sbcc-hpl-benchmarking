@@ -1,0 +1,39 @@
+# Source the base configuration
+source $HOME/clustershared/scripts/config-files/base-config.txt
+
+# Platform-Specific Configuration File for odroidMC1-small-825
+# This file overrides the variables defined in the base-config.txt.
+# For detailed documentation, refer to the base-config.txt.
+
+PLATFORM=odroidMC1-small
+ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
+ATLAS_EXTRA_FLAGS="-Fa alg"
+
+################
+# HPL PARAMETERS
+################
+Ns="25984"                                                # #"27520 25984 29056"/"13056 13824 14592" (25984 for builds)
+NBs="128"                                                 # "32 64 96 128 160 192 224 256" for parameter runs; "128" for builds
+Ps="2"                                                    # "1 2 4" for parameter runs; "2" for builds
+RUNs="0 1 2 3 4"
+
+################
+#BIG_LITTLE
+################
+CORE_TYPE="small"
+ATLAS_TIDS='--force-tids="4 0 1 2 3"'
+TASKSET="taskset -c 0,1,2,3"
+SPECIAL_FLAGS="-bind-to user:0,1,2,3"
+
+################
+#HPL RUN
+################
+MPIEXEC_BIND_TO=""                       # Can make a huge difference ("--bind-to core" vs. none on RPi4B makes a huge difference in HPL (in OpenBLAS))
+BLAS_IMPL="ATLAS"                                   # "ATLAS" or "OpenBLAS"
+WARMUP="no"                                            # do a single HPL run that doesn't go into results
+BUILD_RUN="no"                                         # "no" for parameter run "yes" for builds run
+TOP_BUILDs="small"                                      # set if parameter run, unset if build run (linux_OpenBLAS for OpenBLAS, small for ATLAS)
+MASTER_DEVICE=odroid10
+HOSTFILE=$HOME/hostsMC1
+NUM_OF_NODES=4
+CORES_PER_NODE=4

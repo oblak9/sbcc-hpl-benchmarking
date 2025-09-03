@@ -65,5 +65,5 @@ MASTER_DEVICE=default-master            # The main worker node (has to be overri
 HOSTFILE=$HOME/hostfile                 # MPI hostfile (for running HPL via mpiexec, has to be overriden by the platform specific config files)
 NUM_OF_NODES=1                          # Number of nodes for a HPL run.
 CORES_PER_NODE=4                        
-RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-$BLAS_IMPL-params"
+RESULTSDIR="$HOME/clustershared/hpl-results/$PLATFORM/$NUM_OF_NODES-node/$BLAS_IMPL-params"
 RESULTSFILE="$RESULTSDIR/results.txt"
