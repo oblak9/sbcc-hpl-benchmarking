@@ -6,7 +6,7 @@
 PLATFORM=default
 CENTRAL_STORAGE=${USER}@hp01:${HOME}                                        # Not used, 
 ATLAS_STORAGE=atlas-builds/${PLATFORM}
-BUILD_INFO=${SCRIPTS_DIR}/atlas_build/builds_info/builds_info_${PLATFORM}-flags.txt     # File containing the list of ATLAS builds (when building multiple ATLASes, or when running HPL for multiple ATLAS builds.
+BUILD_INFO=${SCRIPTS_DIR}/atlas_build/builds_info/builds_info_${PLATFORM}.txt     # File containing the list of ATLAS builds (when building multiple ATLASes, or when running HPL for multiple ATLAS builds.
 WAIT_DIR=${HOME}/wait-files                                               # Location to store files used for signalling completion on certain tasks.
 ATLAS_CORE_FLAGS=""                                                     # Was used while testing.
 ATLAS_EXTRA_FLAGS=""                                                    # Was used while testing.
