@@ -1,9 +1,7 @@
-# Source the base configuration
-source $HOME/clustershared/scripts/config-files/base-config.txt
-
 # Platform-Specific Configuration File for raspi3B
 # This file overrides the variables defined in the base-config.txt.
 # For detailed documentation, refer to the base-config.txt.
+# NOTE: Configs must use ${VAR} (not bare $VAR) for references.
 
 PLATFORM=raspi3B
 ATLAS_CORE_FLAGS="-D c -DWALL -b 64"
@@ -26,6 +24,6 @@ WARMUP="no"
 BUILD_RUN="no"
 TOP_BUILDs="noarch-flags"
 MASTER_DEVICE=raspi11
-HOSTFILE=$HOME/hostsRPi3B
+HOSTFILE=${HOME}/hostsRPi3B
 NUM_OF_NODES=4
 CORES_PER_NODE=4

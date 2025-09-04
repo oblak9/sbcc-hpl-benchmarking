@@ -1,9 +1,7 @@
-# Source the base configuration
-source $HOME/clustershared/scripts/config-files/base-config.txt
-
 # Platform-Specific Configuration File for raspi4B
 # This file overrides the variables defined in the base-config.txt.
 # For detailed documentation, refer to the base-config.txt.
+# NOTE: Configs must use ${VAR} (not bare $VAR) for references.
 
 PLATFORM=raspi4B
 ATLAS_CORE_FLAGS="-D c -DWALL -b 64"
@@ -26,6 +24,6 @@ WARMUP="no"
 BUILD_RUN="no"
 TOP_BUILDs="linux_OpenBLAS"
 MASTER_DEVICE=raspi21
-HOSTFILE=$HOME/hostsRPi4B
+HOSTFILE=${HOME}/hostsRPi4B
 NUM_OF_NODES=1
 CORES_PER_NODE=4

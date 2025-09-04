@@ -1,7 +1,5 @@
 #!/bin/bash
 
-SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)                             # Dynamic location of the main scripts.
-
 # Function to check the number of parameters
 check_params() {
   if [ "$#" -ne 1 ]; then
@@ -11,24 +9,37 @@ check_params() {
   fi
 }
 
-# Function to load and export configuration files
-load_config_file() {
-  local config_file=$1
-  if [ ! -f "$config_file" ]; then
-    echo "Error: Config file '$config_file' not found."
-    exit 1
-  fi
+# Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
+# - Configs must use ${VAR} (not bare $VAR) for references.
+# - No external deps, no eval.
 
-  # Read the config file line by line
-  while IFS= read -r line || [ -n "$line" ]; do
-    # Skip comments and empty lines
-    [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
-    # Evaluate valid variable assignments
-    eval "$line"
-    # Export the variable to make it available to child scripts
-    var_name=$(echo "$line" | cut -d'=' -f1)
-    export "$var_name"
-  done < "$config_file"
+load_cfg() {
+  local base_cfg="$1" platform_cfg="$2"
+
+  # Collect just the keys defined in the two files (to avoid touching other env vars)
+  mapfile -t _KEYS < <(
+    cat "$base_cfg" "$platform_cfg" 2>/dev/null \
+      | sed -E '/^\s*(#|$)/d; s/\s*#.*//; s/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=.*/\1/' \
+      | awk '!seen[$0]++'
+  )
+
+  # Source both: platform overrides base; auto-export during sourcing
+  set -a
+  [ -f "$base_cfg" ]      && . "$base_cfg"
+  [ -f "$platform_cfg" ]  && . "$platform_cfg"
+  set +a
+
+  # Late-expand ${VAR} placeholders (recursive) for those keys only
+  local k v name
+  for k in "${_KEYS[@]}"; do
+    v=${!k}
+    while [[ $v =~ \$\{([A-Za-z_][A-Za-z0-9_]*)\} ]]; do
+      name=${BASH_REMATCH[1]}
+      v=${v//\$\{$name\}/${!name}}
+    done
+    printf -v "$k" '%s' "$v"
+    export "$k"
+  done
 }
 
 # Function to create an array of devices
@@ -124,17 +135,16 @@ run_hpl_execution() {
 
 # Main function to execute selected steps
 main() {
+  SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)               # Dynamic location of the main scripts.
+  LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process.
+
   check_params "$@"
   config_file="$1"
-  base_config="${SCRIPTS_DIR}/config-files/base-config.txt" # Use the second parameter or default to the hardcoded path
+  base_config="${SCRIPTS_DIR}/config-files/base-config.txt" # Use the second parameter or default to the hardcoded path 
 
   # Load the base configuration
-  echo "Loading base configuration from $base_config..." >> "$LOG_FILE"
-  load_config_file "$base_config"
-
-  # Load the platform-specific configuration
-  echo "Loading platform-specific configuration from $config_file..." >> "$LOG_FILE"
-  load_config_file "$config_file"
+  echo "Loading base configuration from $base_config and $config_file"
+  load_cfg "$base_config" "$config_file"
 
   # Ensure the log file exists
   touch "$LOG_FILE"

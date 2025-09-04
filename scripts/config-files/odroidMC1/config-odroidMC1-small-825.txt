@@ -1,9 +1,7 @@
-# Source the base configuration
-source $HOME/clustershared/scripts/config-files/base-config.txt
-
 # Platform-Specific Configuration File for odroidMC1-small-825
 # This file overrides the variables defined in the base-config.txt.
 # For detailed documentation, refer to the base-config.txt.
+# NOTE: Configs must use ${VAR} (not bare $VAR) for references.
 
 PLATFORM=odroidMC1-small-825
 ATLAS_CORE_FLAGS="-D c -DWALL -b 32"
@@ -34,6 +32,6 @@ WARMUP="no"
 BUILD_RUN="no"
 TOP_BUILDs="small"
 MASTER_DEVICE=odroid10
-HOSTFILE=$HOME/hostsMC1
+HOSTFILE=${HOME}/hostsMC1
 NUM_OF_NODES=4
 CORES_PER_NODE=4
