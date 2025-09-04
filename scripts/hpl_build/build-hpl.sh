@@ -48,8 +48,9 @@
 
 # Required inputs (exported by executor.sh)
 : "${HPL_STORAGE:?HPL_STORAGE must be set, e.g. hpl-builds/${PLATFORM}}"
-: "${CENTRAL_STORAGE:?CENTRAL_STORAGE must be set, e.g. user@hp01:${HOME}}"
-: "${HOSTFILE:?HOSTFILE must point to a list of nodes}"
+
+# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
+CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
 
 # Where this node keeps built artifacts (per platform), e.g. /home/<user>/clustershared/atlas-builds/<PLATFORM>
 LOCAL_BUILDS_ROOT="${HOME}/${HPL_STORAGE}"
