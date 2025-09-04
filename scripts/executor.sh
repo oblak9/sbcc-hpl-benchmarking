@@ -16,29 +16,45 @@ check_params() {
 load_cfg() {
   local base_cfg="$1" platform_cfg="$2"
 
-  # Collect just the keys defined in the two files (to avoid touching other env vars)
-  mapfile -t _KEYS < <(
-    cat "$base_cfg" "$platform_cfg" 2>/dev/null \
-      | sed -E '/^\s*(#|$)/d; s/\s*#.*//; s/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=.*/\1/' \
-      | awk '!seen[$0]++'
-  )
+  # Read KEY=VALUE lines from both files into an associative array (platform overrides base).
+  declare -A CFG=()
+  _read_cfg() {
+    local f="$1" line key val
+    [ -f "$f" ] || return 0
+    while IFS= read -r line || [ -n "$line" ]; do
+      line="${line%%#*}"                                   # strip comments
+      line="${line#"${line%%[![:space:]]*}"}"              # ltrim
+      line="${line%"${line##*[![:space:]]}"}"              # rtrim
+      [ -z "$line" ] && continue
+      [[ "$line" != *"="* ]] && continue
+      key=${line%%=*}; val=${line#*=}
+      key="${key#"${key%%[![:space:]]*}"}"; key="${key%"${key##*[![:space:]]}"}"
+      val="${val#"${val%%[![:space:]]*}"}"; val="${val%"${val##*[![:space:]]}"}"
+      CFG["$key"]="$val"
+    done < "$f"
+  }
 
-  # Source both: platform overrides base; auto-export during sourcing
-  set -a
-  [ -f "$base_cfg" ]      && . "$base_cfg"
-  [ -f "$platform_cfg" ]  && . "$platform_cfg"
-  set +a
+  _read_cfg "$base_cfg"
+  _read_cfg "$platform_cfg"
 
-  # Late-expand ${VAR} placeholders (recursive) for those keys only
-  local k v name
-  for k in "${_KEYS[@]}"; do
-    v=${!k}
-    while [[ $v =~ \$\{([A-Za-z_][A-Za-z0-9_]*)\} ]]; do
-      name=${BASH_REMATCH[1]}
-      v=${v//\$\{$name\}/${!name}}
+  # Export RAW values first so variables can reference each other (and env like SCRIPTS_DIR/HOME).
+  local k
+  for k in "${!CFG[@]}"; do export "$k=${CFG[$k]}"; done
+
+  # Late-expand ${VAR} and $VAR safely (no command eval). Two passes for chained refs.
+  local v name repl pass
+  for pass in 1 2; do
+    for k in "${!CFG[@]}"; do
+      v=${!k}
+      while [[ $v =~ (\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)) ]]; do
+        name="${BASH_REMATCH[2]:-${BASH_REMATCH[3]}}"
+        repl="${!name-}"
+        v="${v//\$\{$name\}/${repl}}"
+        v="${v//\$$name/${repl}}"
+      done
+      printf -v "$k" '%s' "$v"
+      export "$k"
     done
-    printf -v "$k" '%s' "$v"
-    export "$k"
   done
 }
 
@@ -113,6 +129,8 @@ run_and_wait_hpl_makefiles() {
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
     echo "Running hpl makefiles creation on $current_host" >> "$LOG_FILE"
+    echo "PLATFORM=$PLATFORM"
+    echo "BUILD_INFO=$BUILD_INFO"
     ssh "$current_host" "tmux new-session -d -s 'hplsetup' -- '$hplbuildcommand'" &
   done
 
@@ -137,6 +155,9 @@ run_hpl_execution() {
 main() {
   SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)               # Dynamic location of the main scripts.
   LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process.
+
+  # Export these for use in sourced scripts
+  export SCRIPTS_DIR LOG_FILE
 
   check_params "$@"
   config_file="$1"
