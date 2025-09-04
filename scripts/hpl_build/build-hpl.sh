@@ -44,6 +44,60 @@
 #   Adjust the path "/path/to/atlas/build/" to the correct path where the ATLAS builds
 #   are located on each node.
 
+# --- Universal distribution setup ---
+
+# Required inputs (exported by executor.sh)
+: "${HPL_STORAGE:?HPL_STORAGE must be set, e.g. hpl-builds/${PLATFORM}}"
+: "${CENTRAL_STORAGE:?CENTRAL_STORAGE must be set, e.g. user@hp01:${HOME}}"
+: "${HOSTFILE:?HOSTFILE must point to a list of nodes}"
+
+# Where this node keeps built artifacts (per platform), e.g. /home/<user>/clustershared/atlas-builds/<PLATFORM>
+LOCAL_BUILDS_ROOT="${HOME}/${HPL_STORAGE}"
+
+# Central staging URL (user@host:/path) that all nodes can reach
+CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${HPL_STORAGE}"
+
+# If your build artifacts live somewhere else, override BUILD_OUTPUT_ROOT before the loop
+BUILD_OUTPUT_ROOT="${BUILD_OUTPUT_ROOT:-$LOCAL_BUILDS_ROOT}"
+
+# rsync/ssh defaults (tweak as desired)
+RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
+RSYNC_OPTS='-az --delete --partial'
+
+# Stage one built build directory to the central store
+#   $1 = BUILD_NAME    (dir name to use on central)
+#   $2 = BUILD_DIR     (absolute path where artifacts were produced on this node)
+stage_to_central() {
+  local build_name="$1"
+  local build_dir="$2"
+  if [ ! -d "$build_dir" ]; then
+    echo "stage_to_central: missing dir: $build_dir" >&2
+    return 1
+  fi
+  # Ensure central path exists, then push
+  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p '${CENTRAL_BUILDS_URL#*:}/${build_name}'"
+  rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
+    "${build_dir}/" \
+    "${CENTRAL_BUILDS_URL}/${build_name}/"
+}
+
+# Mirror everything from central to every node in HOSTFILE (idempotent)
+fanout_all_nodes() {
+  if [ ! -f "$HOSTFILE" ]; then
+    echo "fanout_all_nodes: HOSTFILE not found: $HOSTFILE" >&2
+    return 1
+  fi
+  while IFS= read -r node; do
+    [ -z "$node" ] && continue
+    # Ensure destination exists on node
+    ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
+    # Pull from central into node
+    ${RSYNC_SSH} "$node" "rsync ${RSYNC_OPTS} -e '${RSYNC_SSH}' \
+      '${CENTRAL_BUILDS_URL}/' \
+      '${LOCAL_BUILDS_ROOT}/'"
+  done < "$HOSTFILE"
+}
+
 # Determine node numbers based on the hostname and master device
 current_hostname=$(hostname)
 
@@ -112,14 +166,29 @@ exchange_binaries() {
 determine_node_numbers
 generate_node_list
 
-while read -r build_line; do
+# --- Build loop + universal distribution ---
+
+while IFS= read -r build_line; do
+  [ -z "$build_line" ] && continue
+
+  # Build this ATLAS/HPL variant on the assigned/builder node
   process_build "$build_line"
-  build_name=$(echo "$build_line" | cut -d "|" -f 3)
-  # the exchange of binaries should only be done if different nodes built different HPLs
-  if [ "$HPL_EXCHANGE_BINARIES" = "1" ]; then
-      exchange_binaries "$build_name"
-  fi
+
+  # Derive the build's name (same as you do elsewhere)
+  build_name="$(echo "$build_line" | cut -d '|' -f 3)"
+
+  # Where artifacts for this build live on this node:
+  # If your script outputs elsewhere, set BUILD_OUTPUT_ROOT accordingly before this loop
+  BUILD_DIR="${BUILD_OUTPUT_ROOT}/${build_name}"
+  [ -d "$BUILD_DIR" ] || { echo "WARN: expected $BUILD_DIR not found; creating it"; mkdir -p "$BUILD_DIR"; }
+
+  # Always stage to central — works for single or multiple builds
+  stage_to_central "$build_name" "$BUILD_DIR"
+
 done < "$BUILD_INFO"
+
+# After all builds are staged, fan-out the complete set from central to ALL nodes
+fanout_all_nodes
 
 # Done signal
 done_file="hpl-$(hostname)-done.txt"
