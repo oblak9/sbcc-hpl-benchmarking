@@ -81,21 +81,14 @@ stage_to_central() {
     "${CENTRAL_BUILDS_URL}/${build_name}/"
 }
 
-# Mirror everything from central to every node in HOSTFILE (idempotent)
+# Mirror everything from central to every node in DEVICES (idempotent)
 fanout_all_nodes() {
-  if [ ! -f "$HOSTFILE" ]; then
-    echo "fanout_all_nodes: HOSTFILE not found: $HOSTFILE" >&2
-    return 1
-  fi
-  while IFS= read -r node; do
-    [ -z "$node" ] && continue
-    # Ensure destination exists on node
+  for node in "${DEVICES[@]}"; do
     ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
-    # Pull from central into node
     ${RSYNC_SSH} "$node" "rsync ${RSYNC_OPTS} -e '${RSYNC_SSH}' \
       '${CENTRAL_BUILDS_URL}/' \
       '${LOCAL_BUILDS_ROOT}/'"
-  done < "$HOSTFILE"
+  done
 }
 
 # Determine node numbers based on the hostname and master device
@@ -179,6 +172,8 @@ while IFS= read -r build_line; do
 
   # Where artifacts for this build live on this node:
   # If your script outputs elsewhere, set BUILD_OUTPUT_ROOT accordingly before this loop
+  BUILD_OUTPUT_ROOT="${HPL_DIR}/bin"
+
   BUILD_DIR="${BUILD_OUTPUT_ROOT}/${build_name}"
   [ -d "$BUILD_DIR" ] || { echo "WARN: expected $BUILD_DIR not found; creating it"; mkdir -p "$BUILD_DIR"; }
 
