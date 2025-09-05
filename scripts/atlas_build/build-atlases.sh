@@ -67,6 +67,8 @@ process_build() {
   stage_to_central "$BUILD_NAME" "$build_dir"
 }
 
+# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
+CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
 # Central staging URL (user@host:/path) that all nodes can reach
 CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${ATLAS_STORAGE}"
 # Where this node keeps built artifacts (per platform), e.g. /home/<user>/atlas-builds/<PLATFORM>
@@ -83,7 +85,7 @@ stage_to_central() {
     return 1
   fi
   # Ensure central path exists, then push
-  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p '${CENTRAL_BUILDS_URL#*:}/${build_name}'"
+  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p \"${CENTRAL_BUILDS_URL#*:}/${build_name}\""
   rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
     "${build_dir}/" \
     "${CENTRAL_BUILDS_URL}/${build_name}/"
