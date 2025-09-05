@@ -1,69 +1,113 @@
 #!/bin/bash
 
-# HPL Build and Exchange Script
-#
-# This script automates the process of building HPL (High Performance Linpack) 
-# on multiple Linux nodes, each with its own ATLAS (BLAS) build. The script 
-# assumes that each node has a specific ATLAS build and ensures that each node 
-# builds HPL only for the ATLAS build it possesses. After building, the nodes 
-# exchange their HPL binaries with each other.
-#
-# Usage:
-#   ./hpl_build_exchange.sh <config-file>
-#
-# Arguments:
-#   <config-file> : A configuration file that contains necessary environment 
-#                   variables and settings.
-#
-# Configuration File Requirements:
-#   The configuration file should define the following variables:
-#     - MASTER_DEVICE: The hostname of the master device.
-#     - NUM_OF_NODES: The total number of nodes in the cluster.
-#     - HPL_DIR: The directory where the HPL source code is located.
-#     - HPL_GENERIC_MAKEFILE: The path to the generic HPL makefile.
-#     - LOG_FILE: The file to log the build and exchange processes.
-#     - BUILD_INFO: A file containing the build information in the format:
-#                   <info1>|<info2>|<BUILD_NAME>|<info3>|<BUILD_OPT_FLAGS>|<BUILD_FLAGS>
-#     - USER: The username for SSH connections.
-#     - WAIT_DIR: The directory on the master device where completion signals are sent.
-#
-# Node List Generation:
-#   The script dynamically generates the list of node hostnames based on the 
-#   MASTER_DEVICE and NUM_OF_NODES variables.
-#
-# Main Steps:
-#   1. Check if the configuration file is provided and source it.
-#   2. Determine the current node's number and generate the list of all nodes.
-#   3. Process each build specified in the BUILD_INFO file:
-#      - Check if the node has the specific ATLAS build.
-#      - If it does, build the HPL for that ATLAS build.
-#      - Exchange the built binaries with all other nodes.
-#   4. Signal completion to the master device.
-#
-# Note:
-#   Adjust the path "/path/to/atlas/build/" to the correct path where the ATLAS builds
-#   are located on each node.
+# Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
+# - Configs must use ${VAR} (not bare $VAR) for references.
+# - No external deps, no eval.
 
-# --- Universal distribution setup ---
+load_cfg() {
+  local base_cfg="$1" platform_cfg="$2"
+
+  # Read KEY=VALUE lines from both files into an associative array (platform overrides base).
+  declare -A CFG=()
+  _read_cfg() {
+    local f="$1" line key val
+    [ -f "$f" ] || return 0
+    while IFS= read -r line || [ -n "$line" ]; do
+      line="${line%%#*}"                                   # strip comments
+      line="${line#"${line%%[![:space:]]*}"}"              # ltrim
+      line="${line%"${line##*[![:space:]]}"}"              # rtrim
+      [ -z "$line" ] && continue
+      [[ "$line" != *"="* ]] && continue
+      key=${line%%=*}; val=${line#*=}
+      key="${key#"${key%%[![:space:]]*}"}"; key="${key%"${key##*[![:space:]]}"}"
+      val="${val#"${val%%[![:space:]]*}"}"; val="${val%"${val##*[![:space:]]}"}"
+      CFG["$key"]="$val"
+    done < "$f"
+  }
+
+  _read_cfg "$base_cfg"
+  _read_cfg "$platform_cfg"
+
+  # Export RAW values first so variables can reference each other (and env like SCRIPTS_DIR/HOME).
+  local k
+  for k in "${!CFG[@]}"; do export "$k=${CFG[$k]}"; done
+
+  # Late-expand ${VAR} and $VAR safely (no command eval). Two passes for chained refs.
+  local v name repl pass
+  for pass in 1 2; do
+    for k in "${!CFG[@]}"; do
+      v=${!k}
+      while [[ $v =~ (\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)) ]]; do
+        name="${BASH_REMATCH[2]:-${BASH_REMATCH[3]}}"
+        repl="${!name-}"
+        v="${v//\$\{$name\}/${repl}}"
+        v="${v//\$$name/${repl}}"
+      done
+      printf -v "$k" '%s' "$v"
+      export "$k"
+    done
+  done
+}
+
+# Load configs if a config file is passed
+if [ $# -eq 1 ]; then
+  config_file="$1"
+  base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
+  load_cfg "$base_config" "$config_file"
+fi
 
 # Required inputs (exported by executor.sh)
 : "${HPL_STORAGE:?HPL_STORAGE must be set, e.g. hpl-builds/${PLATFORM}}"
 
-# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
+# Variable declarations and exports (group all constants here)
+hostname=$(hostname)
 CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
-
-# Where this node keeps built artifacts (per platform), e.g. /home/<user>/clustershared/atlas-builds/<PLATFORM>
 LOCAL_BUILDS_ROOT="${HOME}/${HPL_STORAGE}"
-
-# Central staging URL (user@host:/path) that all nodes can reach
 CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${HPL_STORAGE}"
-
-# If your build artifacts live somewhere else, override BUILD_OUTPUT_ROOT before the loop
 BUILD_OUTPUT_ROOT="${BUILD_OUTPUT_ROOT:-$LOCAL_BUILDS_ROOT}"
-
-# rsync/ssh defaults (tweak as desired)
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
+NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)  # Added for consistency
+
+# Function to create an array of devices
+create_devices_array() {
+  DEVICES=()
+  master_node_number="${MASTER_DEVICE//[!0-9]}"
+  for ((i=$master_node_number; i<$(expr $master_node_number + $NUM_OF_NODES); i+=1)); do
+    host_number=$(printf "%02d" "$i")
+    DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
+  done
+}
+
+# Function to determine node numbers (added for consistency)
+determine_node_numbers() {
+  # Validate DEVICES array
+  if [[ ${#DEVICES[@]} -eq 0 ]]; then
+    echo "ERROR: DEVICES array is empty. Ensure it is set in the parent script (e.g., executor.sh)."
+    exit 1
+  fi
+
+  # Find the current node's ordinal number in the DEVICES array
+  current_node_ord_number=""
+  for i in "${!DEVICES[@]}"; do
+    if [[ "${DEVICES[$i]}" == "$hostname" ]]; then
+      current_node_ord_number=$i
+      break
+    fi
+  done
+
+  # Validate that the current hostname was found
+  if [[ -z "$current_node_ord_number" ]]; then
+    echo "ERROR: Current hostname ($hostname) not found in DEVICES array: ${DEVICES[*]}"
+    exit 1
+  fi
+
+  # Total number of nodes is the length of the DEVICES array
+  total_nodes=${#DEVICES[@]}
+
+  echo "DEBUG: Current node ordinal number: $current_node_ord_number"
+  echo "DEBUG: Total nodes: $total_nodes"
+}
 
 # Stage one built build directory to the central store
 #   $1 = BUILD_NAME    (dir name to use on central)
@@ -89,24 +133,6 @@ fanout_all_nodes() {
     ${RSYNC_SSH} "$node" "rsync ${RSYNC_OPTS} -e '${RSYNC_SSH}' \
       '${CENTRAL_BUILDS_URL}/' \
       '${LOCAL_BUILDS_ROOT}/'"
-  done
-}
-
-# Determine node numbers based on the hostname and master device
-current_hostname=$(hostname)
-
-determine_node_numbers() {
-  start_node_number="${MASTER_DEVICE//[!0-9]}"
-  total_nodes=$((NUM_OF_NODES - 1))
-}
-
-# Generate the list of nodes dynamically
-generate_node_list() {
-  NODES=()
-  master_base="${MASTER_DEVICE//[0-9]/}"
-  for ((i=0; i<=total_nodes; i++)); do
-    node="${master_base}$((start_node_number + i))"
-    NODES+=("$node")
   done
 }
 
@@ -144,49 +170,34 @@ process_build() {
   make arch="$build_name" -B
 }
 
-# Function to exchange built HPL binaries with other nodes
-exchange_binaries() {
-  local build_name=$1
-  local build_dir="$HOME/hpl-2.3/bin/$build_name"
-  for node in "${NODES[@]}"; do
-    if [ "$node" != "$current_hostname" ]; then
-      scp -r "$build_dir" "$USER@$node:$HOME/hpl-2.3/bin/"
-      echo "$(hostname) sent $build_name binary to $node" >> $LOG_FILE
-    fi
+create_devices_array
+determine_node_numbers  # Added for consistency
+
+fanout_only=false
+if [ "$2" = "--fanout-only" ]; then
+  fanout_only=true
+fi
+
+if [ "$fanout_only" = false ]; then
+  for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+    build_line=$(sed -n "${i}p" "$BUILD_INFO")
+    [ -z "$build_line" ] && continue
+    echo "$(hostname) is building line ${i} of HPL build: $build_line" >> "$LOG_FILE"
+    process_build "$build_line" || echo "WARNING: Failed to process build: $build_line" >> "$LOG_FILE"
+
+    # Derive the build's name
+    build_name="$(echo "$build_line" | cut -d '|' -f 3)"
+    BUILD_DIR="${HPL_DIR}/bin/${build_name}"
+    [ -d "$BUILD_DIR" ] || { echo "WARN: expected $BUILD_DIR not found; creating it"; mkdir -p "$BUILD_DIR"; }
+
+    # Always stage to central
+    stage_to_central "$build_name" "$BUILD_DIR"
   done
-}
-
-# Main script to process all builds
-determine_node_numbers
-generate_node_list
-
-# --- Build loop + universal distribution ---
-
-while IFS= read -r build_line; do
-  [ -z "$build_line" ] && continue
-
-  # Build this ATLAS/HPL variant on the assigned/builder node
-  process_build "$build_line"
-
-  # Derive the build's name (same as you do elsewhere)
-  build_name="$(echo "$build_line" | cut -d '|' -f 3)"
-
-  # Where artifacts for this build live on this node:
-  # If your script outputs elsewhere, set BUILD_OUTPUT_ROOT accordingly before this loop
-  BUILD_OUTPUT_ROOT="${HPL_DIR}/bin"
-
-  BUILD_DIR="${BUILD_OUTPUT_ROOT}/${build_name}"
-  [ -d "$BUILD_DIR" ] || { echo "WARN: expected $BUILD_DIR not found; creating it"; mkdir -p "$BUILD_DIR"; }
-
-  # Always stage to central — works for single or multiple builds
-  stage_to_central "$build_name" "$BUILD_DIR"
-
-done < "$BUILD_INFO"
+fi
 
 # After all builds are staged, fan-out the complete set from central to ALL nodes
 fanout_all_nodes
 
 # Done signal
-done_file="hpl-$(hostname)-done.txt"
-touch "$done_file"
-scp "$done_file" "$USER@$MASTER_DEVICE:$WAIT_DIR"
+touch "hpl-$(hostname)-done.txt"
+scp "hpl-$(hostname)-done.txt" "$USER@$MASTER_DEVICE:$WAIT_DIR"

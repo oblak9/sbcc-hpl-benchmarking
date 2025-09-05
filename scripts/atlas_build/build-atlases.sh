@@ -1,26 +1,103 @@
 #!/bin/bash
 
+# Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
+# - Configs must use ${VAR} (not bare $VAR) for references.
+# - No external deps, no eval.
+
+load_cfg() {
+  local base_cfg="$1" platform_cfg="$2"
+
+  # Read KEY=VALUE lines from both files into an associative array (platform overrides base).
+  declare -A CFG=()
+  _read_cfg() {
+    local f="$1" line key val
+    [ -f "$f" ] || return 0
+    while IFS= read -r line || [ -n "$line" ]; do
+      line="${line%%#*}"                                   # strip comments
+      line="${line#"${line%%[![:space:]]*}"}"              # ltrim
+      line="${line%"${line##*[![:space:]]}"}"              # rtrim
+      [ -z "$line" ] && continue
+      [[ "$line" != *"="* ]] && continue
+      key=${line%%=*}; val=${line#*=}
+      key="${key#"${key%%[![:space:]]*}"}"; key="${key%"${key##*[![:space:]]}"}"
+      val="${val#"${val%%[![:space:]]*}"}"; val="${val%"${val##*[![:space:]]}"}"
+      CFG["$key"]="$val"
+    done < "$f"
+  }
+
+  _read_cfg "$base_cfg"
+  _read_cfg "$platform_cfg"
+
+  # Export RAW values first so variables can reference each other (and env like SCRIPTS_DIR/HOME).
+  local k
+  for k in "${!CFG[@]}"; do export "$k=${CFG[$k]}"; done
+
+  # Late-expand ${VAR} and $VAR safely (no command eval). Two passes for chained refs.
+  local v name repl pass
+  for pass in 1 2; do
+    for k in "${!CFG[@]}"; do
+      v=${!k}
+      while [[ $v =~ (\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)) ]]; do
+        name="${BASH_REMATCH[2]:-${BASH_REMATCH[3]}}"
+        repl="${!name-}"
+        v="${v//\$\{$name\}/${repl}}"
+        v="${v//\$$name/${repl}}"
+      done
+      printf -v "$k" '%s' "$v"
+      export "$k"
+    done
+  done
+}
+
+# Load configs if a config file is passed
+if [ $# -eq 1 ]; then
+  config_file="$1"
+  base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
+  load_cfg "$base_config" "$config_file"
+fi
+
+# Variable declarations and exports (group all constants here)
 CONFIGURE="$HOME/ATLAS/configure"
 NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)
-
 hostname=$(hostname)
-
-# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
 CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
-# Central staging URL (user@host:/path) that all nodes can reach
 CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${ATLAS_STORAGE}"
-# Where this node keeps built artifacts (per platform), e.g. /home/<user>/atlas-builds/<PLATFORM>
 LOCAL_BUILDS_ROOT="${HOME}/${ATLAS_STORAGE}"
+RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
+RSYNC_OPTS='-az --delete --partial'
+
+# Function to create an array of devices (same as in executor.sh)
+create_devices_array() {
+  DEVICES=()
+  master_node_number="${MASTER_DEVICE//[!0-9]}"
+  for ((i=$master_node_number; i<$(expr $master_node_number + $NUM_OF_NODES); i+=1)); do
+    host_number=$(printf "%02d" "$i")
+    DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
+  done
+}
 
 # Function to determine node numbers
 determine_node_numbers() {
+  # Validate DEVICES array
+  if [[ ${#DEVICES[@]} -eq 0 ]]; then
+    echo "ERROR: DEVICES array is empty. Ensure it is set in the parent script (e.g., executor.sh)."
+    exit 1
+  fi
+
   # Find the current node's ordinal number in the DEVICES array
+  current_node_ord_number=""
   for i in "${!DEVICES[@]}"; do
     if [[ "${DEVICES[$i]}" == "$hostname" ]]; then
       current_node_ord_number=$i
       break
     fi
   done
+
+  # Validate that the current hostname was found
+  if [[ -z "$current_node_ord_number" ]]; then
+    echo "ERROR: Current hostname ($hostname) not found in DEVICES array: ${DEVICES[*]}"
+    exit 1
+  fi
 
   # Total number of nodes is the length of the DEVICES array
   total_nodes=${#DEVICES[@]}
@@ -41,16 +118,9 @@ stage_to_central() {
     return 1
   fi
 
-  # Debugging output
-  echo "DEBUG: build_dir=${build_dir}"
-  echo "DEBUG: LOCAL_BUILDS_ROOT=${LOCAL_BUILDS_ROOT}"
-
   # Extract the hostname and path parts from CENTRAL_STORAGE
   local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
   local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
-
-  echo "DEBUG: central_host=${central_host}"
-  echo "DEBUG: central_path=${central_path}"
 
   # Ensure the central path exists on the remote host
   ${RSYNC_SSH} "$central_host" "mkdir -p \"$central_path/$build_name\""
@@ -121,31 +191,27 @@ process_build() {
 
 # Function to create and send the "done" file
 create_and_send_done_file() {
-  local done_file="$HOME/atlas-done.txt"
-  
-  # Create the "done" file
-  touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
-  
-  # Send the "done" file to the master device
+  touch "$$HOME/atlas-done.txt" || { echo "Error: Failed to create done file."; exit 1; }
   scp "$done_file" "$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt" || { echo "Error: Failed to send done file."; exit 1; }
-  
-  # Clean up local "done" file
   rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
 }
 
 # Main script logic
+create_devices_array
 determine_node_numbers
-for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
-  #TODO: Possible bug - nodes that start with X0, instead of X1, such as odroid10.
-  # since the first nodes ord number is 0, and we have to start from line 1 of the file we have to use i+1
-  line=$(sed -n "${i}p" "$BUILD_INFO")
 
-  echo "$(hostname) is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
-  process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
-done
+fanout_only=false
+if [ "$2" = "--fanout-only" ]; then
+  fanout_only=true
+fi
+
+if [ "$fanout_only" = false ]; then
+  for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+    line=$(sed -n "${i}p" "$BUILD_INFO")
+    echo "$(hostname) is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
+    process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
+  done
+fi
 
 fanout_all_nodes
-
-# Call the function to create and send the "done" file at the end
-# TODO: Do it regardless of the error in Atlas builds?
 create_and_send_done_file

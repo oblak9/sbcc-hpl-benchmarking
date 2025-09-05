@@ -76,12 +76,17 @@ clean_wait_dir() {
 
 # Function to run atlas builds on all nodes and wait for completion
 run_and_wait_atlas_builds() {
-  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh"
+  # Add a flag for fanout-only (e.g., if a second argument is passed)
+  local fanout_only=""
+  if [ "$2" = "--fanout-only" ]; then
+    fanout_only="--fanout-only"
+  fi
+  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh $config_file $fanout_only"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
     echo "Starting atlas builds on $current_host" >> "$LOG_FILE"
-    ssh "$current_host" "tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'" &
+    ssh "$current_host" "export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'" &
   done
 
   # Run build command on the master node directly
@@ -96,42 +101,18 @@ run_and_wait_atlas_builds() {
   eval "$waitcommand"
 }
 
-# Function to collect atlas builds from all devices
-collect_atlas_builds() {
-  for current_host in "${DEVICES[@]:1}"; do
-    scp -r "$USER@$current_host:$HOME/atlas-*" "$HOME"
-  done
-}
-
-# Function to distribute atlas builds (directories) to all devices
-distribute_atlas_builds() {
-  local atlas_builds
-  # Find only directories in the $HOME directory that match atlas-*
-  atlas_builds=$(find "$HOME" -maxdepth 1 -type d -name "atlas-*")
-
-  for current_host in "${DEVICES[@]:1}"; do
-    for build in $atlas_builds; do
-      echo "$build on host $current_host"
-      if ssh "$current_host" "test -d \"$HOME/$(basename "$build")\""; then
-        echo "Skipping $build on $current_host, already exists."
-      else
-        echo "Distributing $build to $current_host" >> "$LOG_FILE"
-        scp -r "$build" "$USER@$current_host:$HOME"
-      fi
-    done
-  done
-}
-
-# Function to run HPL makefile creation and wait for completion
 run_and_wait_hpl_makefiles() {
-  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh"
+  # Add a flag for fanout-only (e.g., if a second argument is passed)
+  local fanout_only=""
+  if [ "$2" = "--fanout-only" ]; then
+    fanout_only="--fanout-only"
+  fi
+  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh $config_file $fanout_only"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
     echo "Running hpl makefiles creation on $current_host" >> "$LOG_FILE"
-    echo "PLATFORM=$PLATFORM"
-    echo "BUILD_INFO=$BUILD_INFO"
-    ssh "$current_host" "tmux new-session -d -s 'hplsetup' -- '$hplbuildcommand'" &
+    ssh "$current_host" "export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'hplsetup' -- '$hplbuildcommand'" &
   done
 
   # Run build command on the master node directly
@@ -154,10 +135,7 @@ run_hpl_execution() {
 # Main function to execute selected steps
 main() {
   SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)               # Dynamic location of the main scripts.
-  LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process.
-
-  # Export these for use in sourced scripts
-  export SCRIPTS_DIR LOG_FILE
+  LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process.  
 
   check_params "$@"
   config_file="$1"
@@ -172,14 +150,17 @@ main() {
 
   create_devices_array
 
+  # Export these for use in sourced scripts
+  export SCRIPTS_DIR LOG_FILE DEVICES
+
   echo "Select steps to execute:"
   echo "1. Clean wait directory"
   echo "2. Run atlas builds and wait for completion"
-  echo "3. Collect atlas builds from all nodes"
-  echo "4. Distribute atlas builds"
-  echo "5. Run HPL makefiles and wait for completion"
-  echo "6. Run HPL execution"
-  echo "7. All steps"
+  echo "3. Run HPL makefiles and wait for completion"
+  echo "4. Run HPL execution"
+  echo "5. Fanout existing ATLAS builds (no rebuild)"
+  echo "6. Fanout existing HPL builds (no rebuild)"  # New step
+  echo "7. All steps"  # Renumbered
   
   read -p "Enter the steps you want to execute (e.g., 1 2 3 4): " -a steps
 
@@ -187,21 +168,19 @@ main() {
     case $step in
       1) clean_wait_dir ;;
       2) run_and_wait_atlas_builds ;;
-      3) collect_atlas_builds ;;
-      4) distribute_atlas_builds ;;
-      5) run_and_wait_hpl_makefiles ;;
-      6) run_hpl_execution ;;
+      3) run_and_wait_hpl_makefiles ;;
+      4) run_hpl_execution ;;
+      5) run_and_wait_atlas_builds "" "--fanout-only" ;;  # On-demand ATLAS fanout
+      6) run_and_wait_hpl_makefiles "" "--fanout-only" ;;  # New: On-demand HPL fanout
       7) 
         clean_wait_dir
         run_and_wait_atlas_builds
-        collect_atlas_builds
-        distribute_atlas_builds
         run_and_wait_hpl_makefiles
         run_hpl_execution
         ;;
       *) echo "Invalid step: $step" ;;
-    esac
-  done
+      esac
+    done
 }
 
 main "$@"
