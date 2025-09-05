@@ -5,6 +5,13 @@ NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)
 
 hostname=$(hostname)
 
+# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
+CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
+# Central staging URL (user@host:/path) that all nodes can reach
+CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${ATLAS_STORAGE}"
+# Where this node keeps built artifacts (per platform), e.g. /home/<user>/atlas-builds/<PLATFORM>
+LOCAL_BUILDS_ROOT="${HOME}/${ATLAS_STORAGE}"
+
 # Function to determine node numbers
 determine_node_numbers() {
   # Find the current node's ordinal number in the DEVICES array
@@ -20,6 +27,37 @@ determine_node_numbers() {
 
   echo "DEBUG: Current node ordinal number: $current_node_ord_number"
   echo "DEBUG: Total nodes: $total_nodes"
+}
+
+# Stage one built build directory to the central store
+#   $1 = BUILD_NAME    (dir name to use on central)
+#   $2 = BUILD_DIR     (absolute path where artifacts were produced on this node)
+stage_to_central() {
+  local build_name="$1"
+  local build_dir="$2"
+  if [ ! -d "$build_dir" ]; then
+    echo "stage_to_central: missing dir: $build_dir" >&2
+    return 1
+  fi
+
+  echo "DEBUG: CENTRAL_STORAGE=${CENTRAL_STORAGE}"
+echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
+
+  # Ensure central path exists, then push
+  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p \"${CENTRAL_BUILDS_URL#*:}/${build_name}\""
+  rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
+    "${build_dir}/" \
+    "${CENTRAL_BUILDS_URL}/${build_name}/"
+}
+
+# Mirror everything from central to every node in DEVICES (idempotent)
+fanout_all_nodes() {
+  for node in "${DEVICES[@]}"; do
+    ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
+    rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
+      "${CENTRAL_BUILDS_URL}/" \
+      "$node:${LOCAL_BUILDS_ROOT}/"
+  done
 }
 
 # Function to process each build
@@ -65,40 +103,6 @@ process_build() {
 
   # Stage the build to central storage
   stage_to_central "$BUILD_NAME" "$build_dir"
-}
-
-# Use MASTER_DEVICE (e.g., raspi31) to form CENTRAL_STORAGE if not provided
-CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
-# Central staging URL (user@host:/path) that all nodes can reach
-CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${ATLAS_STORAGE}"
-# Where this node keeps built artifacts (per platform), e.g. /home/<user>/atlas-builds/<PLATFORM>
-LOCAL_BUILDS_ROOT="${HOME}/${ATLAS_STORAGE}"
-
-# Stage one built build directory to the central store
-#   $1 = BUILD_NAME    (dir name to use on central)
-#   $2 = BUILD_DIR     (absolute path where artifacts were produced on this node)
-stage_to_central() {
-  local build_name="$1"
-  local build_dir="$2"
-  if [ ! -d "$build_dir" ]; then
-    echo "stage_to_central: missing dir: $build_dir" >&2
-    return 1
-  fi
-  # Ensure central path exists, then push
-  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p \"${CENTRAL_BUILDS_URL#*:}/${build_name}\""
-  rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
-    "${build_dir}/" \
-    "${CENTRAL_BUILDS_URL}/${build_name}/"
-}
-
-# Mirror everything from central to every node in DEVICES (idempotent)
-fanout_all_nodes() {
-  for node in "${DEVICES[@]}"; do
-    ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
-    rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
-      "${CENTRAL_BUILDS_URL}/" \
-      "$node:${LOCAL_BUILDS_ROOT}/"
-  done
 }
 
 # Function to create and send the "done" file

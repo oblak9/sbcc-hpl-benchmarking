@@ -4,6 +4,7 @@
 # NOTE: Configs must use ${VAR} (not bare $VAR) for references.
 
 PLATFORM=raspi5B
+MASTER_DEVICE=raspi31
 ATLAS_CORE_FLAGS="-D c -DWALL -b 64"
 ATLAS_EXTRA_FLAGS="-Fa alg"
 
@@ -23,7 +24,6 @@ BLAS_IMPL="ATLAS"
 WARMUP="no"
 BUILD_RUN="no"
 TOP_BUILDs="atlarch-all-spec"
-MASTER_DEVICE=raspi31
 HOSTFILE=${HOME}/hostsRPi5B
 NUM_OF_NODES=4
 CORES_PER_NODE=4
