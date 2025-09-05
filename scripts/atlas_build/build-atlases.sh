@@ -35,16 +35,25 @@ determine_node_numbers() {
 stage_to_central() {
   local build_name="$1"
   local build_dir="$2"
+
   if [ ! -d "$build_dir" ]; then
     echo "stage_to_central: missing dir: $build_dir" >&2
     return 1
   fi
 
+  # Debugging output
+  echo "DEBUG: build_dir=${build_dir}"
   echo "DEBUG: CENTRAL_STORAGE=${CENTRAL_STORAGE}"
-echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
+  echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
 
-  # Ensure central path exists, then push
-  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p \"${CENTRAL_BUILDS_URL#*:}/${build_name}\""
+  # Extract the hostname part from CENTRAL_STORAGE
+  local central_host="${CENTRAL_STORAGE%%:*}"
+  local central_path="${CENTRAL_BUILDS_URL#*:}"
+
+  # Ensure the central path exists on the remote host
+  ${RSYNC_SSH} "$central_host" "mkdir -p \"$central_path/$build_name\""
+
+  # Push the build directory to the central storage
   rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
     "${build_dir}/" \
     "${CENTRAL_BUILDS_URL}/${build_name}/"
