@@ -43,12 +43,14 @@ stage_to_central() {
 
   # Debugging output
   echo "DEBUG: build_dir=${build_dir}"
-  echo "DEBUG: CENTRAL_STORAGE=${CENTRAL_STORAGE}"
-  echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
+  echo "DEBUG: LOCAL_BUILDS_ROOT=${LOCAL_BUILDS_ROOT}"
 
-  # Extract the hostname part from CENTRAL_STORAGE
-  local central_host="${CENTRAL_STORAGE%%:*}"
-  local central_path="${CENTRAL_BUILDS_URL#*:}"
+  # Extract the hostname and path parts from CENTRAL_STORAGE
+  local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
+  local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
+
+  echo "DEBUG: central_host=${central_host}"
+  echo "DEBUG: central_path=${central_path}"
 
   # Ensure the central path exists on the remote host
   ${RSYNC_SSH} "$central_host" "mkdir -p \"$central_path/$build_name\""
@@ -109,6 +111,9 @@ process_build() {
     echo "Error: Required libraries not built for $BUILD_NAME."
     exit 1
   fi
+
+  echo "DEBUG: CENTRAL_STORAGE=${CENTRAL_STORAGE}"
+  echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
 
   # Stage the build to central storage
   stage_to_central "$BUILD_NAME" "$build_dir"
