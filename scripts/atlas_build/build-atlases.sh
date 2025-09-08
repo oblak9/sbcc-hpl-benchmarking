@@ -191,7 +191,7 @@ process_build() {
 
 # Function to create and send the "done" file
 create_and_send_done_file() {
-  touch "$$HOME/atlas-done.txt" || { echo "Error: Failed to create done file."; exit 1; }
+  touch "$HOME/atlas-done.txt" || { echo "Error: Failed to create done file."; exit 1; }
   scp "$done_file" "$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt" || { echo "Error: Failed to send done file."; exit 1; }
   rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
 }
