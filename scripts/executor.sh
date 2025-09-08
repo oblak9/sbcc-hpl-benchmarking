@@ -3,8 +3,11 @@
 # Function to check the number of parameters
 check_params() {
   if [ "$#" -ne 1 ]; then
-    echo "Error: You must provide exactly one parameter."
+    echo "Error: You must provide exactly one parameter: the path to the platform-specific config file."
     echo "Usage: $0 <config-file>"
+    echo "Example: $0 /path/to/config-raspi5B.txt"
+    echo "The config file should be a platform-specific configuration file (e.g., config-raspi5B.txt) that overrides base settings for your platform."
+    echo "Ensure the file exists and is readable. For more details, refer to the base-config.txt file."
     exit 1
   fi
 }
