@@ -47,6 +47,9 @@ load_cfg() {
       export "$k"
     done
   done
+
+  echo -e "Configs \n'$1' and \n'$2' loaded. \nPress Enter to continue..."
+  read
 }
 
 # Load configs if a config file is passed
@@ -54,6 +57,16 @@ if [ $# -eq 1 ]; then
   config_file="$1"
   base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
   load_cfg "$base_config" "$config_file"
+
+  echo -e "\nSuccessfully checked for the existence of input parameters: '$1'.\nPress Enter to continue..."
+  read
+else
+  echo "Error: You must provide exactly one parameter: the path to the platform-specific config file."
+  echo "Usage: $0 <config-file>"
+  echo "Example: $0 /path/to/config-raspi5B.txt"
+  echo "The config file should be a platform-specific configuration file (e.g., config-raspi5B.txt) that overrides base settings for you"
+  echo "Ensure the file exists and is readable. For more details, refer to the base-config.txt file."
+  exit 1
 fi
 
 # Variable declarations and exports (group all constants here)
@@ -66,6 +79,18 @@ LOCAL_BUILDS_ROOT="${HOME}/${ATLAS_STORAGE}"
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 
+# Debugging block (separate for verification)
+echo "DEBUG: CONFIGURE=$CONFIGURE"
+echo "DEBUG: NUM_OF_BUILDS=$NUM_OF_BUILDS"
+echo "DEBUG: hostname=$hostname"
+echo "DEBUG: CENTRAL_STORAGE=$CENTRAL_STORAGE"
+echo "DEBUG: CENTRAL_BUILDS_URL=$CENTRAL_BUILDS_URL"
+echo "DEBUG: LOCAL_BUILDS_ROOT=$LOCAL_BUILDS_ROOT"
+echo "DEBUG: RSYNC_SSH=$RSYNC_SSH"
+echo "DEBUG: RSYNC_OPTS=$RSYNC_OPTS"
+echo -e "\nDebugging of the required variables complete. Press Enter to continue..."
+read
+
 # Function to create an array of devices (same as in executor.sh)
 create_devices_array() {
   DEVICES=()
@@ -74,12 +99,15 @@ create_devices_array() {
     host_number=$(printf "%02d" "$i")
     DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
   done
+
+  echo -e "Device array created:\n'${DEVICES[*]}'. \nPress Enter to continue..."
+  read
 }
 
 # Function to determine node numbers
 determine_node_numbers() {
   # Validate DEVICES array
-  if [[ ${#DEVICES[@]} -eq 0 ]]; then
+  if [ ${#DEVICES[@]} -eq 0 ]; then
     echo "ERROR: DEVICES array is empty. Ensure it is set in the parent script (e.g., executor.sh)."
     exit 1
   fi
@@ -101,9 +129,6 @@ determine_node_numbers() {
 
   # Total number of nodes is the length of the DEVICES array
   total_nodes=${#DEVICES[@]}
-
-  echo "DEBUG: Current node ordinal number: $current_node_ord_number"
-  echo "DEBUG: Total nodes: $total_nodes"
 }
 
 # Stage one built build directory to the central store
@@ -122,22 +147,48 @@ stage_to_central() {
   local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
   local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
 
-  # Ensure the central path exists on the remote host
-  ${RSYNC_SSH} "$central_host" "mkdir -p \"$central_path/$build_name\""
+    # Transform mkdir command into a variable for debugging
+  local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
 
-  # Push the build directory to the central storage
-  rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
-    "${build_dir}/" \
-    "${CENTRAL_BUILDS_URL}/${build_name}/"
+  echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \nPress any key to continue..."
+  read
+
+  eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; return 1; }
+
+  local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
+
+  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \nPress any key to continue..."
+  read
+
+  # Execute the rsync command
+  eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
 }
 
 # Mirror everything from central to every node in DEVICES (idempotent)
 fanout_all_nodes() {
+  # First, pull from central to local (handles remote-to-local)
+  local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
+  echo "DEBUG: pull_cmd=$pull_cmd"
+  read
+  eval "$pull_cmd" || { echo "Error: Failed to pull from central."; return 1; }
+
+  # Then, push from local to other nodes (local-to-remote)
   for node in "${DEVICES[@]}"; do
-    ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
-    rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
-      "${CENTRAL_BUILDS_URL}/" \
-      "$node:${LOCAL_BUILDS_ROOT}/"
+    if [[ "$node" == "$hostname" ]]; then
+      continue  # Skip self
+    fi
+
+    local mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
+    echo "DEBUG: mkdir_cmd=$mkdir_cmd"
+    read
+
+    eval "$mkdir_cmd" || { echo "Error: Failed to create directory on $node."; continue; }
+
+    local push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
+    echo "DEBUG: push_cmd=$push_cmd"
+    read
+
+    eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
   done
 }
 
@@ -182,17 +233,21 @@ process_build() {
     exit 1
   fi
 
-  echo "DEBUG: CENTRAL_STORAGE=${CENTRAL_STORAGE}"
-  echo "DEBUG: CENTRAL_BUILDS_URL=${CENTRAL_BUILDS_URL}"
-
   # Stage the build to central storage
   stage_to_central "$BUILD_NAME" "$build_dir"
 }
 
 # Function to create and send the "done" file
 create_and_send_done_file() {
-  touch "$HOME/atlas-done.txt" || { echo "Error: Failed to create done file."; exit 1; }
-  scp "$done_file" "$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt" || { echo "Error: Failed to send done file."; exit 1; }
+  local done_file="$HOME/atlas-done.txt"
+  touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt\""
+
+  echo -e "SCP line to send done files: \n${scp_cmd} \nPress any key to continue..."
+  read
+
+  eval "$scp_cmd" || { echo "Error: Failed to send done file."; exit 1; }
+
   rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
 }
 
@@ -207,6 +262,8 @@ fi
 
 if [ "$fanout_only" = false ]; then
   for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+    echo -e "NUM OF BUILDS: $NUM_OF_BUILDS"
+    echo -e "total_nodes: $total_nodes"
     line=$(sed -n "${i}p" "$BUILD_INFO")
     echo "$(hostname) is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
     process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
