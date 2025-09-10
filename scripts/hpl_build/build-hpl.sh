@@ -184,7 +184,7 @@ process_build() {
 
   # Check if the node has the specific ATLAS build
   if [[ ! -f "${ATLAS_STORAGE}/${build_name}/lib/libcblas.a" || ! -f "${ATLAS_STORAGE}/${build_name}/lib/libatlas.a" ]]; then
-    echo "Error: Required libraries not built for $build_name, skipping." >> "$LOG_FILE"
+    echo "Error: Required libraries (${ATLAS_STORAGE}/${build_name}/lib/libcblas.a and ${ATLAS_STORAGE}/${build_name}/lib/libatlas.a) not built for $build_name, skipping." >> "$LOG_FILE"
     return
   fi
 
