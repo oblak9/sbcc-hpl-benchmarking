@@ -169,7 +169,8 @@ run_hpl_execution() {
 # Main function to execute selected steps
 main() {
   SCRIPTS_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)               # Dynamic location of the main scripts.
-  LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process.  
+  LOG_FILE=$(pwd)/log.txt                                                 # Log file that records the steps in the process. 
+  touch "$LOG_FILE" 
 
   check_params "$@"
   config_file="$1"
@@ -178,9 +179,6 @@ main() {
   # Load the base configuration
   echo "Loading base configuration from $base_config and $config_file"
   load_cfg "$base_config" "$config_file"
-
-  # Ensure the log file exists
-  touch "$LOG_FILE"
 
   create_devices_array
 
