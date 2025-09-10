@@ -48,8 +48,7 @@ load_cfg() {
     done
   done
 
-  echo -e "Configs \n'$1' and \n'$2' loaded. \nPress Enter to continue..."
-  read
+  echo -e "Configs \n'$1' and \n'$2' loaded. \n"
 }
 
 # Load configs if a config file is passed
@@ -88,8 +87,7 @@ echo "DEBUG: CENTRAL_BUILDS_URL=$CENTRAL_BUILDS_URL"
 echo "DEBUG: LOCAL_BUILDS_ROOT=$LOCAL_BUILDS_ROOT"
 echo "DEBUG: RSYNC_SSH=$RSYNC_SSH"
 echo "DEBUG: RSYNC_OPTS=$RSYNC_OPTS"
-echo -e "\nDebugging of the required variables complete. Press Enter to continue..."
-read
+echo -e "\nDebugging of the required variables complete.\n"
 
 # Function to create an array of devices (same as in executor.sh)
 create_devices_array() {
@@ -100,8 +98,7 @@ create_devices_array() {
     DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
   done
 
-  echo -e "Device array created:\n'${DEVICES[*]}'. \nPress Enter to continue..."
-  read
+  echo -e "Device array created:\n'${DEVICES[*]}'. \n"
 }
 
 # Function to determine node numbers
@@ -150,15 +147,13 @@ stage_to_central() {
     # Transform mkdir command into a variable for debugging
   local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
 
-  echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \nPress any key to continue..."
-  read
+  echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"
 
   eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; return 1; }
 
   local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
 
-  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \nPress any key to continue..."
-  read
+  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \n"
 
   # Execute the rsync command
   eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
@@ -169,7 +164,6 @@ fanout_all_nodes() {
   # First, pull from central to local (handles remote-to-local)
   local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
   echo "DEBUG: pull_cmd=$pull_cmd"
-  read
   eval "$pull_cmd" || { echo "Error: Failed to pull from central."; return 1; }
 
   # Then, push from local to other nodes (local-to-remote)
@@ -180,13 +174,11 @@ fanout_all_nodes() {
 
     local mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
     echo "DEBUG: mkdir_cmd=$mkdir_cmd"
-    read
 
     eval "$mkdir_cmd" || { echo "Error: Failed to create directory on $node."; continue; }
 
     local push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
     echo "DEBUG: push_cmd=$push_cmd"
-    read
 
     eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
   done
@@ -243,8 +235,7 @@ create_and_send_done_file() {
   touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
   local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt\""
 
-  echo -e "SCP line to send done files: \n${scp_cmd} \nPress any key to continue..."
-  read
+  echo -e "SCP line to send done files: \n${scp_cmd} \n"
 
   eval "$scp_cmd" || { echo "Error: Failed to send done file."; exit 1; }
 
