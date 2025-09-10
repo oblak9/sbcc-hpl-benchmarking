@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG_FILE=$(pwd)/log-atlas.txt                               # Local logs
+LOG_FILE=$(pwd)/log-atlas-build.txt                               # Local logs
 touch "$LOG_FILE" 
 
 # Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
@@ -146,7 +146,7 @@ stage_to_central() {
   local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
   local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
 
-    # Transform mkdir command into a variable for debugging
+  # Make the central storage directory
   local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
 
   echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"  >> "$LOG_FILE"

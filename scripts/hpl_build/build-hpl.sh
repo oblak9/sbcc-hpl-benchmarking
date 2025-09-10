@@ -1,5 +1,8 @@
 #!/bin/bash
 
+LOG_FILE=$(pwd)/log-hpl-build.txt                               # Local logs
+touch "$LOG_FILE" 
+
 # Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
 # - Configs must use ${VAR} (not bare $VAR) for references.
 # - No external deps, no eval.
@@ -69,6 +72,14 @@ RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)  # Added for consistency
 
+echo "DEBUG: CENTRAL_STORAGE: $CENTRAL_STORAGE"
+echo "DEBUG: LOCAL_BUILDS_ROOT: $LOCAL_BUILDS_ROOT"
+echo "DEBUG: CENTRAL_BUILDS_URL: $CENTRAL_BUILDS_URL"
+echo "DEBUG: BUILD_OUTPUT_ROOT: $BUILD_OUTPUT_ROOT"
+echo "DEBUG: RSYNC_SSH: $RSYNC_SSH"
+echo "DEBUG: RSYNC_OPTS: $RSYNC_OPTS"
+echo "DEBUG: NUM_OF_BUILDS: $NUM_OF_BUILDS"
+
 # Function to create an array of devices
 create_devices_array() {
   DEVICES=()
@@ -77,6 +88,8 @@ create_devices_array() {
     host_number=$(printf "%02d" "$i")
     DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
   done
+
+  echo -e "Device array created:\n'${DEVICES[*]}'. \n"  >> "$LOG_FILE"
 }
 
 # Function to determine node numbers (added for consistency)
@@ -104,9 +117,6 @@ determine_node_numbers() {
 
   # Total number of nodes is the length of the DEVICES array
   total_nodes=${#DEVICES[@]}
-
-  echo "DEBUG: Current node ordinal number: $current_node_ord_number"
-  echo "DEBUG: Total nodes: $total_nodes"
 }
 
 # Stage one built build directory to the central store
@@ -115,24 +125,53 @@ determine_node_numbers() {
 stage_to_central() {
   local build_name="$1"
   local build_dir="$2"
+
   if [ ! -d "$build_dir" ]; then
     echo "stage_to_central: missing dir: $build_dir" >&2
     return 1
   fi
-  # Ensure central path exists, then push
-  ${RSYNC_SSH} "${CENTRAL_STORAGE%%:*}" "mkdir -p '${CENTRAL_BUILDS_URL#*:}/${build_name}'"
-  rsync ${RSYNC_OPTS} -e "${RSYNC_SSH}" \
-    "${build_dir}/" \
-    "${CENTRAL_BUILDS_URL}/${build_name}/"
+
+  # Extract the hostname and path parts from CENTRAL_STORAGE
+  local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
+  local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/hpl-builds/raspi5B'
+
+  # Make the central storage directory
+  local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
+
+  echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"  >> "$LOG_FILE"
+
+  eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; return 1; }
+
+  local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
+
+  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
+
+  # Execute the rsync command
+  eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
 }
 
 # Mirror everything from central to every node in DEVICES (idempotent)
 fanout_all_nodes() {
+  # First, pull from central to local (handles remote-to-local)
+  local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
+  echo -e "Command to pull from central to local: \n $pull_cmd" >> "$LOG_FILE"
+  eval "$pull_cmd" || { echo "Error: Failed to pull from central."; return 1; }
+
+  # Then, push from local to other nodes (local-to-remote)
   for node in "${DEVICES[@]}"; do
-    ${RSYNC_SSH} "$node" "mkdir -p '${LOCAL_BUILDS_ROOT}'"
-    ${RSYNC_SSH} "$node" "rsync ${RSYNC_OPTS} -e '${RSYNC_SSH}' \
-      '${CENTRAL_BUILDS_URL}/' \
-      '${LOCAL_BUILDS_ROOT}/'"
+    if [[ "$node" == "$hostname" ]]; then
+      continue  # Skip self
+    fi
+
+    local mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
+    echo -e "Command to make a local build directory on node $node: \n $mkdir_cmd" >> "$LOG_FILE"
+
+    eval "$mkdir_cmd" || { echo "Error: Failed to create directory on $node."; continue; }
+
+    local push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
+    echo -e "Command to push from central to node $node: \n $push_cmd" >> "$LOG_FILE"
+
+    eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
   done
 }
 
@@ -144,7 +183,7 @@ process_build() {
   local build_flags=$(echo "$build_line" | cut -d "|" -f 6)
 
   # Check if the node has the specific ATLAS build
-  if [[ ! -f "$HOME/atlas-$build_name/lib/libcblas.a" || ! -f "$HOME/atlas-$build_name/lib/libatlas.a" ]]; then
+  if [[ ! -f "${ATLAS_STORAGE}/${build_name}/lib/libcblas.a" || ! -f "${ATLAS_STORAGE}/${build_name}/lib/libatlas.a" ]]; then
     echo "Error: Required libraries not built for $build_name, skipping." >> "$LOG_FILE"
     return
   fi
@@ -168,6 +207,16 @@ process_build() {
   # Build the project
   echo "$(hostname) is building HPL for $build_name build" >> "$LOG_FILE"
   make arch="$build_name" -B
+}
+
+# Function to create and send the "done" file
+create_and_send_done_file() {
+  local done_file="$HOME/hpl-${hostname}-done.txt"
+  touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/hpl-$(hostname)-done.txt\""
+  echo -e "SCP line to send done files: \n${scp_cmd} \n" >> "$LOG_FILE"
+  eval "$scp_cmd" || { echo "Error: Failed to send done file."; exit 1; }
+  rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
 }
 
 create_devices_array
@@ -197,7 +246,4 @@ fi
 
 # After all builds are staged, fan-out the complete set from central to ALL nodes
 fanout_all_nodes
-
-# Done signal
-touch "hpl-$(hostname)-done.txt"
-scp "hpl-$(hostname)-done.txt" "$USER@$MASTER_DEVICE:$WAIT_DIR"
+create_and_send_done_file
