@@ -10,8 +10,7 @@ check_params() {
     echo "Ensure the file exists and is readable. For more details, refer to the base-config.txt file."
     exit 1
   fi
-  echo -e "\nSuccessfully checked for the existence of input parameters: '$1'.\nPress Enter to continue..."
-  read
+  echo -e "\nSuccessfully checked for the existence of input parameters: '$1'.\n" >> "$LOG_FILE"
 }
 
 # Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
@@ -62,8 +61,7 @@ load_cfg() {
     done
   done
   
-  echo -e "Configs \n'$1' and \n'$2' loaded. \nPress Enter to continue..."
-  read
+  echo -e "Configs \n'$1' and \n'$2' loaded. \n" >> "$LOG_FILE"
 }
 
 # Function to create an array of devices
@@ -74,8 +72,7 @@ create_devices_array() {
     host_number=$(printf "%02d" "$i")
     DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
   done
-  echo -e "Device array created:\n'${DEVICES[*]}'. \nPress Enter to continue..."
-  read
+  echo -e "Device array created:\n'${DEVICES[*]}'. \n" >> "$LOG_FILE"
 }
 
 # Function to clean the old wait directory
@@ -88,10 +85,8 @@ clean_wait_dir() {
   else
     echo "FAIL: Directory not cleaned."
   fi
-  echo -e "\nContents of $WAIT_DIR after cleaning:\n"
-  ls -la "$WAIT_DIR"
-  echo -e "\nPress Enter to continue..."
-  read
+  echo -e "\nContents of $WAIT_DIR after cleaning:\n" >> "$LOG_FILE"
+  ls -la "$WAIT_DIR" >> "$LOG_FILE"
 }
 
 # Function to run atlas builds on all nodes and wait for completion
@@ -106,10 +101,8 @@ run_and_wait_atlas_builds() {
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
     atlas_cmd="ssh \"$current_host\" \"export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'\""
-    echo "Starting atlas builds on $current_host" >> "$LOG_FILE"
 
-    echo -e "\nStarting atlas builds on '$current_host' with:\n '$atlas_cmd' \nPress Enter to continue..."
-    read
+    echo -e "\nStarting atlas builds on '$current_host' with:\n '$atlas_cmd' \n"
 
     eval "$atlas_cmd" &
   done
@@ -118,8 +111,7 @@ run_and_wait_atlas_builds() {
   echo "Starting atlas builds on $HOSTNAME" >> "$LOG_FILE"
   atlas_cmd="eval \"$atlasbuildcommand && touch \\\"$WAIT_DIR/atlas-${HOSTNAME}-done.txt\\\"\""
   
-  echo -e "\nStarting atlas builds on the master ('$HOSTNAME') with:\n '$atlas_cmd' \nPress Enter to continue..."
-    read
+  echo -e "\nStarting atlas builds on the master ('$HOSTNAME') with:\n '$atlas_cmd' \n"
 
   eval "$atlas_cmd"
 
@@ -129,13 +121,15 @@ run_and_wait_atlas_builds() {
     waitcommand+=" \"$WAIT_DIR/atlas-${current_host}-done.txt\""
   done
 
-  echo -e "\nWaiting with waitcommand '$waitcommand'. \nPress Enter to continue..."
-    read
+  echo -e "\nWaiting with waitcommand '$waitcommand'. \n"
 
   eval "$waitcommand"
 }
 
 run_and_wait_hpl_makefiles() {
+  echo -e "\nRunning HPL makefiles creation and waiting for completion.\n Press Enter to continue..."
+  read
+  
   # Add a flag for fanout-only (e.g., if a second argument is passed)
   local fanout_only=""
   if [ "$2" = "--fanout-only" ]; then
