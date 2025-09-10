@@ -233,7 +233,7 @@ process_build() {
 
 # Function to create and send the "done" file
 create_and_send_done_file() {
-  local done_file="$HOME/atlas-done.txt"
+  local done_file="$HOME/atlas-${hostname}-done.txt"
   touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
   local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt\""
 
