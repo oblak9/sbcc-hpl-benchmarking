@@ -65,9 +65,9 @@ fi
 # Variable declarations and exports (group all constants here)
 hostname=$(hostname)
 CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
-LOCAL_BUILDS_ROOT="${HOME}/${HPL_STORAGE}"
 CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${HPL_STORAGE}"
-BUILD_OUTPUT_ROOT="${BUILD_OUTPUT_ROOT:-$LOCAL_BUILDS_ROOT}"
+LOCAL_BUILDS_ROOT="${HOME}/${HPL_STORAGE}"
+#BUILD_OUTPUT_ROOT="${BUILD_OUTPUT_ROOT:-$LOCAL_BUILDS_ROOT}"
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)  # Added for consistency
@@ -75,7 +75,7 @@ NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)  # Added for consistency
 echo "DEBUG: CENTRAL_STORAGE: $CENTRAL_STORAGE"
 echo "DEBUG: LOCAL_BUILDS_ROOT: $LOCAL_BUILDS_ROOT"
 echo "DEBUG: CENTRAL_BUILDS_URL: $CENTRAL_BUILDS_URL"
-echo "DEBUG: BUILD_OUTPUT_ROOT: $BUILD_OUTPUT_ROOT"
+#echo "DEBUG: BUILD_OUTPUT_ROOT: $BUILD_OUTPUT_ROOT"
 echo "DEBUG: RSYNC_SSH: $RSYNC_SSH"
 echo "DEBUG: RSYNC_OPTS: $RSYNC_OPTS"
 echo "DEBUG: NUM_OF_BUILDS: $NUM_OF_BUILDS"
@@ -144,7 +144,7 @@ stage_to_central() {
 
   local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
 
-  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
+  echo -e "Command to sync HPL build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
 
   # Execute the rsync command
   eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
@@ -237,10 +237,10 @@ if [ "$fanout_only" = false ]; then
     # Derive the build's name
     build_name="$(echo "$build_line" | cut -d '|' -f 3)"
     BUILD_DIR="${HPL_DIR}/bin/${build_name}"
-    [ -d "$BUILD_DIR" ] || { echo "WARN: expected $BUILD_DIR not found; creating it"; mkdir -p "$BUILD_DIR"; }
+    [ -d "$BUILD_DIR" ] || echo "WARNING: expected $BUILD_DIR not found" >> "$LOG_FILE"
 
     # Always stage to central
-    stage_to_central "$build_name" "$BUILD_DIR"
+    stage_to_central "$BUILD_DIR" "$build_name"
   done
 fi
 

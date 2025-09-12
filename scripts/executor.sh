@@ -127,9 +127,6 @@ run_and_wait_atlas_builds() {
 }
 
 run_and_wait_hpl_makefiles() {
-  echo -e "\nRunning HPL makefiles creation and waiting for completion.\n Press Enter to continue..."
-  read
-  
   # Add a flag for fanout-only (e.g., if a second argument is passed)
   local fanout_only=""
   if [ "$2" = "--fanout-only" ]; then
