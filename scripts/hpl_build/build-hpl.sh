@@ -256,7 +256,7 @@ if [ "$fanout_only" = false ]; then
     [ -d "$BUILD_DIR" ] || echo "WARNING: expected $BUILD_DIR not found" >> "$LOG_FILE"
 
     # Always stage to central
-    stage_to_central "$BUILD_DIR" "$build_name"
+    stage_to_central "$build_name" "$BUILD_DIR"
   done
 fi
 
