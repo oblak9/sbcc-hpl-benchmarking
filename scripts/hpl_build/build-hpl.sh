@@ -206,7 +206,14 @@ process_build() {
 
   # Build the project
   echo "$(hostname) is building HPL for $build_name build" >> "$LOG_FILE"
-  make arch="$build_name" -B
+  
+  ###SIMULATE HPL BUILD
+  mkdir -p bin/$build_name
+  touch bin/$build_name/xhpl
+  touch bin/$build_name/hpl.dat
+  ###END SIMULATION
+
+  #make arch="$build_name" -B
 }
 
 # Function to create and send the "done" file

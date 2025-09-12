@@ -1,1 +1,2 @@
 5|5|atlarch-all-spec|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
+6|6|testbuild-fake|-D c -DWALL -b 64 -A ARM64xgene1 -Fa alg "-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto"||-march=armv8.2-a+crypto+fp16+rcpc+dotprod -mtune=cortex-a76 -mcpu=cortex-a76+crypto
