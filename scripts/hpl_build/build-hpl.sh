@@ -155,7 +155,16 @@ fanout_all_nodes() {
   # First, pull from central to local (handles remote-to-local)
   local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
   echo -e "Command to pull from central to local: \n $pull_cmd" >> "$LOG_FILE"
-  eval "$pull_cmd" || { echo "Error: Failed to pull from central."; return 1; }
+  
+  # Execute rsync and handle exit codes
+  eval "$pull_cmd"
+  local rsync_exit=$?
+  if [[ $rsync_exit -eq 24 ]]; then
+    echo "Warning: Some files vanished during rsync pull (code 24), but continuing." >> "$LOG_FILE"
+  elif [[ $rsync_exit -ne 0 ]]; then
+    echo "Error: Failed to pull from central (rsync exit code $rsync_exit)." >> "$LOG_FILE"
+    return 1
+  fi
 
   # Then, push from local to other nodes (local-to-remote)
   for node in "${DEVICES[@]}"; do
