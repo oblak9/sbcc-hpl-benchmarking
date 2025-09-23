@@ -146,7 +146,7 @@ stage_to_central() {
   local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
   local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
 
-  # Make the central storage directory
+  # Make the central storage directory (idempotent, each node does this safely)
   local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
 
   echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"  >> "$LOG_FILE"
@@ -155,7 +155,7 @@ stage_to_central() {
 
   local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
 
-  echo -e "Command to sync ATLAS build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
+  echo -e "Command to sync ATLAS build to central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
 
   # Execute the rsync command
   eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
@@ -163,7 +163,7 @@ stage_to_central() {
 
 # Mirror everything from central to every node in DEVICES (idempotent)
 fanout_all_nodes() {
-  # First, pull from central to local (handles remote-to-local)
+  # First, pull from central to local (each node gets all builds)
   local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
   echo -e "Command to pull from central to local: \n $pull_cmd" >> "$LOG_FILE"
   
@@ -177,7 +177,7 @@ fanout_all_nodes() {
     return 1
   fi
 
-  # Then, push from local to other nodes (local-to-remote)
+  # Then, push from local to other nodes (each node pushes to others, idempotent)
   for node in "${DEVICES[@]}"; do
     if [[ "$node" == "$hostname" ]]; then
       continue  # Skip self

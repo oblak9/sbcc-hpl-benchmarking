@@ -72,13 +72,13 @@ RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)  # Added for consistency
 
-echo "DEBUG: CENTRAL_STORAGE: $CENTRAL_STORAGE"
-echo "DEBUG: LOCAL_BUILDS_ROOT: $LOCAL_BUILDS_ROOT"
-echo "DEBUG: CENTRAL_BUILDS_URL: $CENTRAL_BUILDS_URL"
-#echo "DEBUG: BUILD_OUTPUT_ROOT: $BUILD_OUTPUT_ROOT"
-echo "DEBUG: RSYNC_SSH: $RSYNC_SSH"
-echo "DEBUG: RSYNC_OPTS: $RSYNC_OPTS"
-echo "DEBUG: NUM_OF_BUILDS: $NUM_OF_BUILDS"
+echo "DEBUG: CENTRAL_STORAGE: $CENTRAL_STORAGE" >> "$LOG_FILE"
+echo "DEBUG: LOCAL_BUILDS_ROOT: $LOCAL_BUILDS_ROOT" >> "$LOG_FILE"
+echo "DEBUG: CENTRAL_BUILDS_URL: $CENTRAL_BUILDS_URL" >> "$LOG_FILE"
+#echo "DEBUG: BUILD_OUTPUT_ROOT: $BUILD_OUTPUT_ROOT" >> "$LOG_FILE"
+echo "DEBUG: RSYNC_SSH: $RSYNC_SSH" >> "$LOG_FILE"
+echo "DEBUG: RSYNC_OPTS: $RSYNC_OPTS" >> "$LOG_FILE"
+echo "DEBUG: NUM_OF_BUILDS: $NUM_OF_BUILDS" >> "$LOG_FILE"
 
 # Function to create an array of devices
 create_devices_array() {
@@ -135,7 +135,7 @@ stage_to_central() {
   local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
   local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/hpl-builds/raspi5B'
 
-  # Make the central storage directory
+  # Make the central storage directory (idempotent, each node does this safely)
   local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
 
   echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"  >> "$LOG_FILE"
@@ -144,7 +144,7 @@ stage_to_central() {
 
   local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
 
-  echo -e "Command to sync HPL build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
+  echo -e "Command to sync HPL build to central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
 
   # Execute the rsync command and capture output
   if eval "$rsync_cmd" 2>>"$LOG_FILE"; then
@@ -157,7 +157,7 @@ stage_to_central() {
 
 # Mirror everything from central to every node in DEVICES (idempotent)
 fanout_all_nodes() {
-  # First, pull from central to local (handles remote-to-local)
+  # First, pull from central to local (each node gets all builds)
   local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
   echo -e "Command to pull from central to local: \n $pull_cmd" >> "$LOG_FILE"
   
@@ -171,7 +171,7 @@ fanout_all_nodes() {
     return 1
   fi
 
-  # Then, push from local to other nodes (local-to-remote)
+  # Then, push from local to other nodes (each node pushes to others, idempotent)
   for node in "${DEVICES[@]}"; do
     if [[ "$node" == "$hostname" ]]; then
       continue  # Skip self
