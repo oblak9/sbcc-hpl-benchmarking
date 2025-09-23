@@ -171,7 +171,12 @@ fanout_all_nodes() {
     return 1
   fi
 
-  # Then, push from local to other nodes (each node pushes to others, idempotent)
+  # Skip pushing if not master node
+  if [[ "$hostname" != "${DEVICES[0]}" ]]; then
+    return 0
+  fi
+
+  # Then, push from local to other nodes (only master does this, and not to self)
   for node in "${DEVICES[@]}"; do
     if [[ "$node" == "$hostname" ]]; then
       continue  # Skip self
