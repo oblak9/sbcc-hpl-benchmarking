@@ -244,7 +244,7 @@ process_build() {
 create_and_send_done_file() {
   local done_file="$HOME/atlas-${hostname}-done.txt"
   touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
-  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-$(hostname)-done.txt\""
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-${hostname}-done.txt\""
 
   echo -e "SCP line to send done files: \n${scp_cmd} \n"  >> "$LOG_FILE"
 
@@ -267,7 +267,7 @@ if [ "$fanout_only" = false ]; then
     echo -e "NUM OF BUILDS: $NUM_OF_BUILDS"   >> "$LOG_FILE"
     echo -e "total_nodes: $total_nodes"   >> "$LOG_FILE"
     line=$(sed -n "${i}p" "$BUILD_INFO")
-    echo "$(hostname) is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
+    echo "${hostname} is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
     process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
   done
 fi

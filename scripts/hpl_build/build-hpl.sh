@@ -146,8 +146,13 @@ stage_to_central() {
 
   echo -e "Command to sync HPL build to a central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
 
-  # Execute the rsync command
-  eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
+  # Execute the rsync command and capture output
+  if eval "$rsync_cmd" 2>>"$LOG_FILE"; then
+    echo "Successfully staged $build_name to central." >> "$LOG_FILE"
+  else
+    echo "Error: Failed to rsync build directory for $build_name." >> "$LOG_FILE"
+    return 1
+  fi
 }
 
 # Mirror everything from central to every node in DEVICES (idempotent)
@@ -214,12 +219,12 @@ process_build() {
   sed -i "s|^TOPdir *=.*|TOPdir = $HPL_DIR|g" "Make.$build_name"
 
   # Build the project
-  echo "$(hostname) is building HPL for $build_name build" >> "$LOG_FILE"
+  echo "${hostname} is building HPL for $build_name build" >> "$LOG_FILE"
   
   ###SIMULATE HPL BUILD
-  mkdir -p bin/$build_name
-  touch bin/$build_name/xhpl
-  touch bin/$build_name/hpl.dat
+  mkdir -p "bin/$build_name" || { echo "ERROR: Failed to create bin/$build_name" >> "$LOG_FILE"; return 1; }
+  touch "bin/$build_name/xhpl" || { echo "ERROR: Failed to create xhpl" >> "$LOG_FILE"; return 1; }
+  touch "bin/$build_name/hpl.dat" || { echo "ERROR: Failed to create hpl.dat" >> "$LOG_FILE"; return 1; }
   ###END SIMULATION
 
   #make arch="$build_name" -B
@@ -229,7 +234,7 @@ process_build() {
 create_and_send_done_file() {
   local done_file="$HOME/hpl-${hostname}-done.txt"
   touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
-  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/hpl-$(hostname)-done.txt\""
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/hpl-${hostname}-done.txt\""
   echo -e "SCP line to send done files: \n${scp_cmd} \n" >> "$LOG_FILE"
   eval "$scp_cmd" || { echo "Error: Failed to send done file."; exit 1; }
   rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
@@ -247,16 +252,22 @@ if [ "$fanout_only" = false ]; then
   for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
     build_line=$(sed -n "${i}p" "$BUILD_INFO")
     [ -z "$build_line" ] && continue
-    echo "$(hostname) is building line ${i} of HPL build: $build_line" >> "$LOG_FILE"
+    echo "${hostname} is building line ${i} of HPL build: $build_line" >> "$LOG_FILE"
     process_build "$build_line" || echo "WARNING: Failed to process build: $build_line" >> "$LOG_FILE"
 
     # Derive the build's name
     build_name="$(echo "$build_line" | cut -d '|' -f 3)"
     BUILD_DIR="${HPL_DIR}/bin/${build_name}"
-    [ -d "$BUILD_DIR" ] || echo "WARNING: expected $BUILD_DIR not found" >> "$LOG_FILE"
+    if [ -d "$BUILD_DIR" ]; then
+      echo "BUILD_DIR exists: $BUILD_DIR" >> "$LOG_FILE"
+      ls -la "$BUILD_DIR" >> "$LOG_FILE"  # Log contents for verification
+    else
+      echo "WARNING: expected $BUILD_DIR not found" >> "$LOG_FILE"
+      continue
+    fi
 
     # Always stage to central
-    stage_to_central "$build_name" "$BUILD_DIR"
+    stage_to_central "$build_name" "$BUILD_DIR" || echo "WARNING: Failed to stage $build_name to central" >> "$LOG_FILE"
   done
 fi
 
