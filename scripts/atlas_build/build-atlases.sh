@@ -75,21 +75,11 @@ fi
 CONFIGURE="$HOME/ATLAS/configure"
 NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)
 hostname=$(hostname)
-CENTRAL_STORAGE="${CENTRAL_STORAGE:-${USER}@${MASTER_DEVICE}:${HOME}}"
-CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${ATLAS_STORAGE}"
-LOCAL_BUILDS_ROOT="${HOME}/${ATLAS_STORAGE}"
-RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
-RSYNC_OPTS='-az --delete --partial'
 
 # Debugging block (separate for verification)
 echo "DEBUG: CONFIGURE=$CONFIGURE"  >> "$LOG_FILE"
 echo "DEBUG: NUM_OF_BUILDS=$NUM_OF_BUILDS"  >> "$LOG_FILE"
 echo "DEBUG: hostname=$hostname"  >> "$LOG_FILE"
-echo "DEBUG: CENTRAL_STORAGE=$CENTRAL_STORAGE"  >> "$LOG_FILE"
-echo "DEBUG: CENTRAL_BUILDS_URL=$CENTRAL_BUILDS_URL"  >> "$LOG_FILE"
-echo "DEBUG: LOCAL_BUILDS_ROOT=$LOCAL_BUILDS_ROOT"  >> "$LOG_FILE"
-echo "DEBUG: RSYNC_SSH=$RSYNC_SSH"  >> "$LOG_FILE"
-echo "DEBUG: RSYNC_OPTS=$RSYNC_OPTS \n"  >> "$LOG_FILE"
 
 # Function to create an array of devices (same as in executor.sh)
 create_devices_array() {
@@ -128,76 +118,6 @@ determine_node_numbers() {
 
   # Total number of nodes is the length of the DEVICES array
   total_nodes=${#DEVICES[@]}
-}
-
-# Stage one built build directory to the central store
-#   $1 = BUILD_NAME    (dir name to use on central)
-#   $2 = BUILD_DIR     (absolute path where artifacts were produced on this node)
-stage_to_central() {
-  local build_name="$1"
-  local build_dir="$2"
-
-  if [ ! -d "$build_dir" ]; then
-    echo "stage_to_central: missing dir: $build_dir" >&2
-    return 1
-  fi
-
-  # Extract the hostname and path parts from CENTRAL_STORAGE
-  local central_host="${CENTRAL_STORAGE%%:*}"  # Extracts 'test@raspi31'
-  local central_path="${CENTRAL_BUILDS_URL#*:}"  # Extracts '/home/test/atlas-builds/raspi5B'
-
-  # Make the central storage directory (idempotent, each node does this safely)
-  local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/$build_name\\\"\""
-
-  echo -e "Mkdir command to create central storage dir: \n'$mkdir_cmd' \n"  >> "$LOG_FILE"
-
-  eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; return 1; }
-
-  local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
-
-  echo -e "Command to sync ATLAS build to central storage dir: \n'$rsync_cmd' \n"  >> "$LOG_FILE"
-
-  # Execute the rsync command
-  eval "$rsync_cmd" || { echo "Error: Failed to rsync build directory."; return 1; }
-}
-
-# Mirror everything from central to every node in DEVICES (idempotent)
-fanout_all_nodes() {
-  # First, pull from central to local (each node gets all builds)
-  local pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
-  echo -e "Command to pull from central to local: \n $pull_cmd" >> "$LOG_FILE"
-  
-  # Execute rsync and handle exit codes
-  eval "$pull_cmd"
-  local rsync_exit=$?
-  if [[ $rsync_exit -eq 24 ]]; then
-    echo "Warning: Some files vanished during rsync pull (code 24), but continuing." >> "$LOG_FILE"
-  elif [[ $rsync_exit -ne 0 ]]; then
-    echo "Error: Failed to pull from central (rsync exit code $rsync_exit)." >> "$LOG_FILE"
-    return 1
-  fi
-
-  # Skip pushing if not the master node
-  if [[ "$hostname" != "${DEVICES[0]}" ]]; then
-    return 0
-  fi
-
-  # Then, push from local to other nodes (only master does this, and not to self)
-  for node in "${DEVICES[@]}"; do
-    if [[ "$node" == "$hostname" ]]; then
-      continue  # Skip self
-    fi
-
-    local mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
-    echo -e "Command to make a local build directory on node $node: \n $mkdir_cmd" >> "$LOG_FILE"
-
-    eval "$mkdir_cmd" || { echo "Error: Failed to create directory on $node."; continue; }
-
-    local push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
-    echo -e "Command to push from central to node $node: \n $push_cmd" >> "$LOG_FILE"
-
-    eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
-  done
 }
 
 # Function to process each build
@@ -240,21 +160,15 @@ process_build() {
     echo "Error: Required libraries not built for $BUILD_NAME."
     exit 1
   fi
-
-  # Stage the build to central storage
-  stage_to_central "$BUILD_NAME" "$build_dir"
 }
 
 # Function to create and send the "done" file
 create_and_send_done_file() {
-  local done_file="$HOME/atlas-${hostname}-done.txt"
+  local done_file="$HOME/atlas-build-${hostname}-done.txt"
   touch "$done_file" || { echo "Error: Failed to create done file."; exit 1; }
-  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-${hostname}-done.txt\""
-
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/atlas-build-${hostname}-done.txt\""
   echo -e "SCP line to send done files: \n${scp_cmd} \n"  >> "$LOG_FILE"
-
   eval "$scp_cmd" || { echo "Error: Failed to send done file."; exit 1; }
-
   rm "$done_file" || { echo "Error: Failed to remove done file."; exit 1; }
 }
 
@@ -262,20 +176,12 @@ create_and_send_done_file() {
 create_devices_array
 determine_node_numbers
 
-fanout_only=false
-if [ "$2" = "--fanout-only" ]; then
-  fanout_only=true
-fi
+for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+  echo -e "NUM OF BUILDS: $NUM_OF_BUILDS"   >> "$LOG_FILE"
+  echo -e "total_nodes: $total_nodes"   >> "$LOG_FILE"
+  line=$(sed -n "${i}p" "$BUILD_INFO")
+  echo "${hostname} is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
+  process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
+done
 
-if [ "$fanout_only" = false ]; then
-  for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
-    echo -e "NUM OF BUILDS: $NUM_OF_BUILDS"   >> "$LOG_FILE"
-    echo -e "total_nodes: $total_nodes"   >> "$LOG_FILE"
-    line=$(sed -n "${i}p" "$BUILD_INFO")
-    echo "${hostname} is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
-    process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
-  done
-fi
-
-fanout_all_nodes
 create_and_send_done_file

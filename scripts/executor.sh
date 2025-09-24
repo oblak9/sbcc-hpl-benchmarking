@@ -91,48 +91,57 @@ clean_wait_dir() {
 
 # Function to run atlas builds on all nodes and wait for completion
 run_and_wait_atlas_builds() {
-  # Add a flag for fanout-only (e.g., if a second argument is passed)
-  local fanout_only=""
-  if [ "$2" = "--fanout-only" ]; then
-    fanout_only="--fanout-only"
-  fi
-  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh $config_file $fanout_only"
+  atlasbuildcommand="$SCRIPTS_DIR/atlas_build/build-atlases.sh $config_file"
+  atlasstagingcommand="$SCRIPTS_DIR/stage-builds.sh atlas $config_file"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
     atlas_cmd="ssh \"$current_host\" \"export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'atlassetup' -- '$atlasbuildcommand'\""
-
     echo -e "\nStarting atlas builds on '$current_host' with:\n '$atlas_cmd' \n"
-
     eval "$atlas_cmd" &
   done
 
   # Run build command on the master node directly
   echo "Starting atlas builds on $HOSTNAME" >> "$LOG_FILE"
-  atlas_cmd="eval \"$atlasbuildcommand && touch \\\"$WAIT_DIR/atlas-${HOSTNAME}-done.txt\\\"\""
-  
+  atlas_cmd="eval \"$atlasbuildcommand && touch \\\"$WAIT_DIR/atlas-build-${HOSTNAME}-done.txt\\\"\""
   echo -e "\nStarting atlas builds on the master ('$HOSTNAME') with:\n '$atlas_cmd' \n"
-
   eval "$atlas_cmd"
 
   # Wait for all nodes to finish by checking their done files
   waitcommand="$SCRIPTS_DIR/wait/waitScript.sh"
   for current_host in "${DEVICES[@]}"; do
-    waitcommand+=" \"$WAIT_DIR/atlas-${current_host}-done.txt\""
+    waitcommand+=" \"$WAIT_DIR/atlas-build-${current_host}-done.txt\""
+  done
+  echo -e "\nWaiting with waitcommand '$waitcommand'. \n"
+  eval "$waitcommand"
+
+  # Start staging on all worker nodes in parallel
+  for current_host in "${DEVICES[@]:1}"; do
+    atlas_stage_cmd="ssh \"$current_host\" \"export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'atlasstage' -- '$atlasstagingcommand'\""
+    echo -e "\nStarting atlas staging on '$current_host' with:\n '$atlas_stage_cmd' \n"
+    eval "$atlas_stage_cmd" &
   done
 
-  echo -e "\nWaiting with waitcommand '$waitcommand'. \n"
+  # Run staging command on the master node directly
+  echo "Starting atlas staging on $HOSTNAME" >> "$LOG_FILE"
+  atlas_stage_cmd="eval \"$atlasstagingcommand && touch \\\"$WAIT_DIR/atlas-stage-${HOSTNAME}-done.txt\\\"\""
+  echo -e "\nStarting atlas staging on the master ('$HOSTNAME') with:\n '$atlas_stage_cmd' \n"
+  eval "$atlas_stage_cmd"
 
-  eval "$waitcommand"
+  # Wait for all stagings to finish by checking their done files
+  stagewaitcommand="$SCRIPTS_DIR/wait/waitScript.sh"
+  for current_host in "${DEVICES[@]}"; do
+    stagewaitcommand+=" \"$WAIT_DIR/atlas-stage-${current_host}-done.txt\""
+  done
+  echo -e "\nWaiting for staging with stagewaitcommand '$stagewaitcommand'. \n"
+  eval "$stagewaitcommand"
+
+  # Fanout builds (from central to master, then from master to all)
+  run_fanout atlas
 }
 
 run_and_wait_hpl_makefiles() {
-  # Add a flag for fanout-only (e.g., if a second argument is passed)
-  local fanout_only=""
-  if [ "$2" = "--fanout-only" ]; then
-    fanout_only="--fanout-only"
-  fi
-  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh $config_file $fanout_only"
+  hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh $config_file"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
@@ -142,14 +151,72 @@ run_and_wait_hpl_makefiles() {
 
   # Run build command on the master node directly
   echo "Running hpl makefiles creation on $HOSTNAME" >> "$LOG_FILE"
-  eval "$hplbuildcommand && touch \"$WAIT_DIR/hpl-${HOSTNAME}-done.txt\""
+  eval "$hplbuildcommand && touch \"$WAIT_DIR/hpl-build-${HOSTNAME}-done.txt\""
 
   # Wait for all nodes to finish
   waitcommand="$SCRIPTS_DIR/wait/waitScript.sh"
   for current_host in "${DEVICES[@]}"; do
-    waitcommand+=" \"$WAIT_DIR/hpl-${current_host}-done.txt\""
+    waitcommand+=" \"$WAIT_DIR/hpl-build-${current_host}-done.txt\""
   done
   eval "$waitcommand"
+
+  # Start staging on all worker nodes in parallel
+  for current_host in "${DEVICES[@]:1}"; do
+    hpl_stage_cmd="ssh \"$current_host\" \"export SCRIPTS_DIR=$SCRIPTS_DIR; tmux new-session -d -s 'hplstage' -- '$hplstagingcommand'\""
+    echo -e "\nStarting hpl staging on '$current_host' with:\n '$hpl_stage_cmd' \n"
+    eval "$hpl_stage_cmd" &
+  done
+
+  # Run staging command on the master node directly
+  echo "Starting hpl staging on $HOSTNAME" >> "$LOG_FILE"
+  hpl_stage_cmd="eval \"$hplstagingcommand && touch \\\"$WAIT_DIR/hpl-stage-${HOSTNAME}-done.txt\\\"\""
+  echo -e "\nStarting hpl staging on the master ('$HOSTNAME') with:\n '$hpl_stage_cmd' \n"
+  eval "$hpl_stage_cmd"
+
+  # Wait for all stagings to finish by checking their done files
+  stagestagewaitcommand="$SCRIPTS_DIR/wait/waitScript.sh"
+  for current_host in "${DEVICES[@]}"; do
+    stagestagewaitcommand+=" \"$WAIT_DIR/hpl-stage-${current_host}-done.txt\""
+  done
+  echo -e "\nWaiting for hpl staging with stagestagewaitcommand '$stagestagewaitcommand'. \n"
+  eval "$stagestagewaitcommand"
+
+  # Fanout builds (from central to master, then from master to all)
+  run_fanout hpl
+}
+
+# Function to fanout builds from central to all nodes (run on master, assumed central can be elsewhere)
+run_fanout() {
+  local type="$1"
+  if [[ "$type" == "atlas" ]]; then
+    storage="$ATLAS_STORAGE"
+  else
+    storage="$HPL_STORAGE"
+  fi
+
+  hostname=$(hostname)
+  CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
+  LOCAL_BUILDS_ROOT="${HOME}/${storage}"
+  RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
+  RSYNC_OPTS='-az --delete --partial'
+
+  # Pull from central to local on master
+  pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
+  echo -e "Pulling from central to local: \n $pull_cmd" >> "$LOG_FILE"
+  eval "$pull_cmd" || { echo "Error: Failed to pull."; return 1; }
+
+  # Push to other nodes
+  for node in "${DEVICES[@]}"; do
+    if [[ "$node" == "$hostname" ]]; then
+      continue
+    fi
+    mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
+    eval "$mkdir_cmd" || { echo "Error: Failed to create dir on $node."; continue; }
+
+    push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
+    echo -e "Pushing to $node: \n $push_cmd" >> "$LOG_FILE"
+    eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
+  done
 }
 
 # Function to run HPL execution
@@ -182,8 +249,8 @@ main() {
   echo "3. Run HPL makefiles and wait for completion"
   echo "4. Run HPL execution"
   echo "5. Fanout existing ATLAS builds (no rebuild)"
-  echo "6. Fanout existing HPL builds (no rebuild)"  # New step
-  echo "7. All steps"  # Renumbered
+  echo "6. Fanout existing HPL builds (no rebuild)"
+  echo "7. All steps"
   
   read -p "Enter the steps you want to execute (e.g., 1 2 3 4): " -a steps
 
@@ -193,8 +260,8 @@ main() {
       2) run_and_wait_atlas_builds ;;
       3) run_and_wait_hpl_makefiles ;;
       4) run_hpl_execution ;;
-      5) run_and_wait_atlas_builds "" "--fanout-only" ;;  # On-demand ATLAS fanout
-      6) run_and_wait_hpl_makefiles "" "--fanout-only" ;;  # New: On-demand HPL fanout
+      5) run_fanout "atlas" ;;  # On-demand ATLAS builds fanout
+      6) run_fanout "hpl" ;;  # On-demand HPL builds fanout
       7) 
         clean_wait_dir
         run_and_wait_atlas_builds

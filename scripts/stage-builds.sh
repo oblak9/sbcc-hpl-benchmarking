@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# Usage: stage-builds.sh <type> <config_file>
+# type: "atlas" or "hpl"
+
+type="$1"
+config_file="$2"
+
+LOG_FILE=$(pwd)/log-${type}-stage.txt
+touch "$LOG_FILE"
+
+# Load configs
+base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
+load_cfg "$base_config" "$config_file"
+
+# Set variables based on type
+if [[ "$type" == "atlas" ]]; then
+  storage="$ATLAS_STORAGE"
+else
+  storage="$HPL_STORAGE"
+fi
+
+hostname=$(hostname)
+CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
+RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
+RSYNC_OPTS='-az --delete --partial'
+
+# Function to create an array of devices
+create_devices_array() {
+  DEVICES=()
+  master_node_number="${MASTER_DEVICE//[!0-9]}"
+  for ((i=$master_node_number; i<$(expr $master_node_number + $NUM_OF_NODES); i+=1)); do
+    host_number=$(printf "%02d" "$i")
+    DEVICES+=("${MASTER_DEVICE//[0-9]}"$host_number)
+  done
+  echo -e "Device array created:\n'${DEVICES[*]}'. \n" >> "$LOG_FILE"
+}
+
+# Function to determine node numbers
+determine_node_numbers() {
+  # Validate DEVICES array
+  if [ ${#DEVICES[@]} -eq 0 ]; then
+    echo "ERROR: DEVICES array is empty. Ensure it is set in the parent script (e.g., executor.sh)."
+    exit 1
+  fi
+
+  # Find the current node's ordinal number in the DEVICES array
+  current_node_ord_number=""
+  for i in "${!DEVICES[@]}"; do
+    if [[ "${DEVICES[$i]}" == "$hostname" ]]; then
+      current_node_ord_number=$i
+      break
+    fi
+  done
+
+  # Validate that the current hostname was found
+  if [[ -z "$current_node_ord_number" ]]; then
+    echo "ERROR: Current hostname ($hostname) not found in DEVICES array: ${DEVICES[*]}"
+    exit 1
+  fi
+
+  # Total number of nodes is the length of the DEVICES array
+  total_nodes=${#DEVICES[@]}
+}
+
+# Function to create and send the "done" file
+create_and_send_done_file() {
+  local done_file="$HOME/${type}-stage-${hostname}-done.txt"
+  touch "$done_file" || { echo "Error: Failed to create stage-done file."; exit 1; }
+  local scp_cmd="scp \"$done_file\" \"$USER@$MASTER_DEVICE:$WAIT_DIR/${type}-stage-${hostname}-done.txt\""
+  echo -e "SCP line to send stage-done files: \n${scp_cmd} \n"  >> "$LOG_FILE"
+  eval "$scp_cmd" || { echo "Error: Failed to send stage-done file."; exit 1; }
+  rm "$done_file" || { echo "Error: Failed to remove stage-done file."; exit 1; }
+}
+
+create_devices_array
+determine_node_numbers
+
+# Stage all built builds to central
+for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+  if [[ "$type" == "atlas" ]]; then
+    line=$(sed -n "${i}p" "$BUILD_INFO")
+    BUILD_NAME=$(echo "$line" | cut -d "|" -f 3)
+    build_dir="${storage}/${BUILD_NAME}"
+  else
+    build_line=$(sed -n "${i}p" "$BUILD_INFO")
+    build_name="$(echo "$build_line" | cut -d '|' -f 3)"
+    build_dir="${HPL_DIR}/bin/${build_name}"
+  fi
+  if [ -d "$build_dir" ]; then
+    # Extract the hostname and path parts from CENTRAL_STORAGE
+    local central_host="${CENTRAL_STORAGE%%:*}"
+    local central_path="${CENTRAL_BUILDS_URL#*:}"
+    local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/${BUILD_NAME:-$build_name}\\\"\""
+    eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; continue; }
+
+    local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${BUILD_NAME:-$build_name}/\""
+    echo -e "Staging $build_dir to central: \n'$rsync_cmd' \n" >> "$LOG_FILE"
+    eval "$rsync_cmd" || { echo "Error: Failed to rsync $build_dir."; continue; }
+  fi
+done
+
+create_and_send_done_file
