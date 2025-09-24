@@ -129,6 +129,13 @@ create_and_send_done_file() {
 create_devices_array
 determine_node_numbers
 
+# Create the parent central directory
+local central_host="${CENTRAL_STORAGE%%:*}"
+local central_path="${CENTRAL_BUILDS_URL#*:}"
+local mkdir_parent_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path\\\"\""
+echo -e "Creating parent central directory: \n'$mkdir_parent_cmd' \n" >> "$LOG_FILE"
+eval "$mkdir_parent_cmd" || { echo "Error: Failed to create parent central directory."; exit 1; }
+
 # Stage all built builds to central
 for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
   if [[ "$type" == "atlas" ]]; then

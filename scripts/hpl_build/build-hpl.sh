@@ -175,9 +175,6 @@ for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
     echo "WARNING: expected $BUILD_DIR not found" >> "$LOG_FILE"
     continue
   fi
-
-  # Always stage to central
-  stage_to_central "$build_name" "$BUILD_DIR" || echo "WARNING: Failed to stage $build_name to central" >> "$LOG_FILE"
 done
 
 create_and_send_done_file
