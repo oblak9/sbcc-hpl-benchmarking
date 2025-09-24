@@ -142,6 +142,7 @@ run_and_wait_atlas_builds() {
 
 run_and_wait_hpl_makefiles() {
   hplbuildcommand="$SCRIPTS_DIR/hpl_build/build-hpl.sh $config_file"
+  hplstagingcommand="$SCRIPTS_DIR/stage-builds.sh hpl $config_file"
 
   # Start builds on all worker nodes in parallel
   for current_host in "${DEVICES[@]:1}"; do
