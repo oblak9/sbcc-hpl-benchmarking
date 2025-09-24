@@ -9,24 +9,6 @@ config_file="$2"
 LOG_FILE=$(pwd)/log-${type}-stage.txt
 touch "$LOG_FILE"
 
-# Load configs
-base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
-load_cfg "$base_config" "$config_file"
-
-echo -e "Starting staging of '$type' builds with config '$config_file'. \n" >> "$LOG_FILE"
-
-# Set variables based on type
-if [[ "$type" == "atlas" ]]; then
-  storage="$ATLAS_STORAGE"
-else
-  storage="$HPL_STORAGE"
-fi
-
-hostname=$(hostname)
-CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
-RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
-RSYNC_OPTS='-az --delete --partial'
-
 # Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
 # - Configs must use ${VAR} (not bare $VAR) for references.
 # - No external deps, no eval.
@@ -77,6 +59,24 @@ load_cfg() {
   
   echo -e "Configs \n'$1' and \n'$2' loaded. \n" >> "$LOG_FILE"
 }
+
+# Load configs
+base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
+load_cfg "$base_config" "$config_file"
+
+echo -e "Starting staging of '$type' builds with config '$config_file'. \n" >> "$LOG_FILE"
+
+# Set variables based on type
+if [[ "$type" == "atlas" ]]; then
+  storage="$ATLAS_STORAGE"
+else
+  storage="$HPL_STORAGE"
+fi
+
+hostname=$(hostname)
+CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
+RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
+RSYNC_OPTS='-az --delete --partial'
 
 # Function to create an array of devices
 create_devices_array() {
