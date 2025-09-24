@@ -27,6 +27,57 @@ CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 
+# Load two plaintext KEY=VALUE configs and expand ${VARS} after overrides.
+# - Configs must use ${VAR} (not bare $VAR) for references.
+# - No external deps, no eval.
+
+load_cfg() {
+  local base_cfg="$1" platform_cfg="$2"
+
+  # Read KEY=VALUE lines from both files into an associative array (platform overrides base).
+  declare -A CFG=()
+  _read_cfg() {
+    local f="$1" line key val
+    [ -f "$f" ] || return 0
+    while IFS= read -r line || [ -n "$line" ]; do
+      line="${line%%#*}"                                   # strip comments
+      line="${line#"${line%%[![:space:]]*}"}"              # ltrim
+      line="${line%"${line##*[![:space:]]}"}"              # rtrim
+      [ -z "$line" ] && continue
+      [[ "$line" != *"="* ]] && continue
+      key=${line%%=*}; val=${line#*=}
+      key="${key#"${key%%[![:space:]]*}"}"; key="${key%"${key##*[![:space:]]}"}"
+      val="${val#"${val%%[![:space:]]*}"}"; val="${val%"${val##*[![:space:]]}"}"
+      CFG["$key"]="$val"
+    done < "$f"
+  }
+
+  _read_cfg "$base_cfg"
+  _read_cfg "$platform_cfg"
+
+  # Export RAW values first so variables can reference each other (and env like SCRIPTS_DIR/HOME).
+  local k
+  for k in "${!CFG[@]}"; do export "$k=${CFG[$k]}"; done
+
+  # Late-expand ${VAR} and $VAR safely (no command eval). Two passes for chained refs.
+  local v name repl pass
+  for pass in 1 2; do
+    for k in "${!CFG[@]}"; do
+      v=${!k}
+      while [[ $v =~ (\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)) ]]; do
+        name="${BASH_REMATCH[2]:-${BASH_REMATCH[3]}}"
+        repl="${!name-}"
+        v="${v//\$\{$name\}/${repl}}"
+        v="${v//\$$name/${repl}}"
+      done
+      printf -v "$k" '%s' "$v"
+      export "$k"
+    done
+  done
+  
+  echo -e "Configs \n'$1' and \n'$2' loaded. \n" >> "$LOG_FILE"
+}
+
 # Function to create an array of devices
 create_devices_array() {
   DEVICES=()
