@@ -13,6 +13,8 @@ touch "$LOG_FILE"
 base_config="${SCRIPTS_DIR}/config-files/base-config.txt"
 load_cfg "$base_config" "$config_file"
 
+echo -e "Starting staging of '$type' builds with config '$config_file'. \n" >> "$LOG_FILE"
+
 # Set variables based on type
 if [[ "$type" == "atlas" ]]; then
   storage="$ATLAS_STORAGE"
