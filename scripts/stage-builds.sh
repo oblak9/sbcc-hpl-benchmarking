@@ -74,7 +74,7 @@ else
 fi
 
 hostname=$(hostname)
-CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
+CENTRAL_BUILDS_URL="${CENTRAL_STORAGE_HOST}:${storage}"
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
 
@@ -129,9 +129,8 @@ create_and_send_done_file() {
 create_devices_array
 determine_node_numbers
 
-central_host="${CENTRAL_STORAGE%%:*}"
 central_path="${CENTRAL_BUILDS_URL#*:}"
-mkdir_parent_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path\\\"\""
+mkdir_parent_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$central_path\\\"\""
 echo -e "Creating parent central directory: \n'$mkdir_parent_cmd' \n" >> "$LOG_FILE"
 eval "$mkdir_parent_cmd" || { echo "Error: Failed to create parent central directory."; exit 1; }
 
@@ -147,10 +146,8 @@ for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
     build_dir="${HPL_DIR}/bin/${build_name}"
   fi
   if [ -d "$build_dir" ]; then
-    # Extract the hostname and path parts from CENTRAL_STORAGE
-    local central_host="${CENTRAL_STORAGE%%:*}"
     local central_path="${CENTRAL_BUILDS_URL#*:}"
-    local mkdir_cmd="${RSYNC_SSH} \"$central_host\" \"mkdir -p \\\"$central_path/${BUILD_NAME:-$build_name}\\\"\""
+    local mkdir_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$central_path/${BUILD_NAME:-$build_name}\\\"\""
     eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; continue; }
 
     local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${BUILD_NAME:-$build_name}/\""

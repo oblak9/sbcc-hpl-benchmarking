@@ -5,7 +5,7 @@
 
 PLATFORM=default
 MASTER_DEVICE=default-master                                    # The main worker node (has to be overriden by the platform specific config files)
-CENTRAL_STORAGE=${USER}@${MASTER_DEVICE}:${HOME}                            # Not used, 
+CENTRAL_STORAGE_HOST=${USER}@${MASTER_DEVICE}                           # Not used, 
 ATLAS_STORAGE=${HOME}/atlas-builds/${PLATFORM}
 HPL_STORAGE=${HOME}/hpl-builds/${PLATFORM}
 BUILD_INFO=${SCRIPTS_DIR}/atlas_build/builds_info/builds_info_${PLATFORM}.txt     # File containing the list of ATLAS builds (when building multiple ATLASes, or when running HPL for multiple ATLAS builds.

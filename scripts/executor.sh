@@ -196,7 +196,7 @@ run_fanout() {
   fi
 
   hostname=$(hostname)
-  CENTRAL_BUILDS_URL="${CENTRAL_STORAGE}/${storage}"
+  CENTRAL_BUILDS_URL="${CENTRAL_STORAGE_HOST}:${storage}"
   LOCAL_BUILDS_ROOT="${HOME}/${storage}"
   RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
   RSYNC_OPTS='-az --delete --partial'
