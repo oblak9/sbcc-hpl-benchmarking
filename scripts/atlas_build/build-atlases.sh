@@ -140,23 +140,9 @@ process_build() {
   ls -la "$build_dir" >> "$LOG_FILE" 2>&1 || echo "ls failed for $build_dir" >> "$LOG_FILE"
   cd "$build_dir" || { echo "Error: Failed to change directory to $build_dir"; exit 1; }
 
-
-  # # Configure and build ATLAS
-  # eval "$CONFIGURE $BUILD_FLAGS" || { echo "Error: Configuration failed for $BUILD_NAME."; exit 1; }
-  # make || { echo "Error: Make command failed for $BUILD_NAME."; exit 1; }
-
-
-########################
-    # Simulate configuration and build
-  echo "Simulating: eval \"$CONFIGURE $BUILD_FLAGS\""
-  echo "Simulating: make"
-
-  # Simulate library verification
-  echo "Simulating: Verifying $build_dir/lib/libcblas.a and $build_dir/lib/libatlas.a"
-  mkdir -p "$build_dir/lib"  >>"$LOG_FILE" 2>&1 # Create the lib directory to simulate the build
-  touch "$build_dir/lib/libcblas.a" "$build_dir/lib/libatlas.a"  >>"$LOG_FILE" 2>&1 # Create dummy library files
-
-#########################
+  # Configure and build ATLAS
+  eval "$CONFIGURE $BUILD_FLAGS" || { echo "Error: Configuration failed for $BUILD_NAME."; exit 1; }
+  make || { echo "Error: Make command failed for $BUILD_NAME."; exit 1; }
 
   # Verify if the libraries have been built
   if [[ ! -f "$build_dir/lib/libcblas.a" || ! -f "$build_dir/lib/libatlas.a" ]]; then

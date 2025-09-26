@@ -135,15 +135,7 @@ process_build() {
 
   # Build the project
   echo "${hostname} is building HPL for $build_name build" >> "$LOG_FILE"
-  
-  ###SIMULATE HPL BUILD
-  mkdir -p "bin/$build_name" || { echo "ERROR: Failed to create bin/$build_name" >> "$LOG_FILE"; return 1; }
-  touch "bin/$build_name/xhpl" || { echo "ERROR: Failed to create xhpl" >> "$LOG_FILE"; return 1; }
-  chmod +x "bin/$build_name/xhpl" || { echo "ERROR: Failed to make xhpl executable" >> "$LOG_FILE"; return 1; }
-  touch "bin/$build_name/HPL.dat" || { echo "ERROR: Failed to create hpl.dat" >> "$LOG_FILE"; return 1; }
-  ###END SIMULATION
-
-  #make arch="$build_name" -B
+  make arch="$build_name" -B
 }
 
 # Function to create and send the "done" file
