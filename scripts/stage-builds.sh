@@ -77,6 +77,7 @@ hostname=$(hostname)
 CENTRAL_BUILDS_URL="${CENTRAL_STORAGE_HOST}:${storage}"
 RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
 RSYNC_OPTS='-az --delete --partial'
+NUM_OF_BUILDS=$(grep -v '^\s*$' "$BUILD_INFO" | wc -l)
 
 # Function to create an array of devices
 create_devices_array() {
@@ -129,28 +130,28 @@ create_and_send_done_file() {
 create_devices_array
 determine_node_numbers
 
-central_path="${CENTRAL_BUILDS_URL#*:}"
-mkdir_parent_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$central_path\\\"\""
+mkdir_parent_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$storage\\\"\""
 echo -e "Creating parent central directory: \n'$mkdir_parent_cmd' \n" >> "$LOG_FILE"
 eval "$mkdir_parent_cmd" || { echo "Error: Failed to create parent central directory."; exit 1; }
+echo "current_node_ord_number: $current_node_ord_number" >> "$LOG_FILE"
+echo "NUM_OF_BUILDS: $NUM_OF_BUILDS" >> "$LOG_FILE"
+echo "total_nodes: $total_nodes" >> "$LOG_FILE"
 
 # Stage all built builds to central
 for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
+  build_line=$(sed -n "${i}p" "$BUILD_INFO")
+  build_name="$(echo "$build_line" | cut -d '|' -f 3)"
+
   if [[ "$type" == "atlas" ]]; then
-    line=$(sed -n "${i}p" "$BUILD_INFO")
-    BUILD_NAME=$(echo "$line" | cut -d "|" -f 3)
-    build_dir="${storage}/${BUILD_NAME}"
+    build_dir="${storage}/${build_name}"
   else
-    build_line=$(sed -n "${i}p" "$BUILD_INFO")
-    build_name="$(echo "$build_line" | cut -d '|' -f 3)"
     build_dir="${HPL_DIR}/bin/${build_name}"
   fi
   if [ -d "$build_dir" ]; then
-    local central_path="${CENTRAL_BUILDS_URL#*:}"
-    local mkdir_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$central_path/${BUILD_NAME:-$build_name}\\\"\""
+    mkdir_cmd="${RSYNC_SSH} \"$CENTRAL_STORAGE_HOST\" \"mkdir -p \\\"$storage/${build_name}\\\"\""
     eval "$mkdir_cmd" || { echo "Error: Failed to create central directory."; continue; }
 
-    local rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${BUILD_NAME:-$build_name}/\""
+    rsync_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${build_dir}/\" \"${CENTRAL_BUILDS_URL}/${build_name}/\""
     echo -e "Staging $build_dir to central: \n'$rsync_cmd' \n" >> "$LOG_FILE"
     eval "$rsync_cmd" || { echo "Error: Failed to rsync $build_dir."; continue; }
   fi

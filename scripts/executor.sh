@@ -197,12 +197,11 @@ run_fanout() {
 
   hostname=$(hostname)
   CENTRAL_BUILDS_URL="${CENTRAL_STORAGE_HOST}:${storage}"
-  LOCAL_BUILDS_ROOT="${HOME}:${storage}"
   RSYNC_SSH='ssh -o BatchMode=yes -o StrictHostKeyChecking=no'
   RSYNC_OPTS='-az --delete --partial'
 
   # Pull from central to local on master
-  pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${LOCAL_BUILDS_ROOT}/\""
+  pull_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${CENTRAL_BUILDS_URL}/\" \"${storage}/\""
   echo -e "Pulling from central to local: \n $pull_cmd" >> "$LOG_FILE"
   eval "$pull_cmd" || { echo "Error: Failed to pull."; return 1; }
 
@@ -211,10 +210,10 @@ run_fanout() {
     if [[ "$node" == "$hostname" ]]; then
       continue
     fi
-    mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${LOCAL_BUILDS_ROOT}'\""
+    mkdir_cmd="${RSYNC_SSH} \"$node\" \"mkdir -p '${storage}'\""
     eval "$mkdir_cmd" || { echo "Error: Failed to create dir on $node."; continue; }
 
-    push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${LOCAL_BUILDS_ROOT}/\" \"$node:${LOCAL_BUILDS_ROOT}/\""
+    push_cmd="rsync ${RSYNC_OPTS} -e \"${RSYNC_SSH}\" \"${storage}/\" \"$node:${storage}/\""
     echo -e "Pushing to $node: \n $push_cmd" >> "$LOG_FILE"
     eval "$push_cmd" || { echo "Error: Failed to push to $node."; continue; }
   done

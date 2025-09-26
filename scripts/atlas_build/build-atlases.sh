@@ -136,7 +136,10 @@ process_build() {
   # Ensure the build directory exists
   rm -rf "$build_dir"
   mkdir -p "$build_dir"
+  echo "Created build_dir: $build_dir" >> "$LOG_FILE"
+  ls -la "$build_dir" >> "$LOG_FILE" 2>&1 || echo "ls failed for $build_dir" >> "$LOG_FILE"
   cd "$build_dir" || { echo "Error: Failed to change directory to $build_dir"; exit 1; }
+
 
   # # Configure and build ATLAS
   # eval "$CONFIGURE $BUILD_FLAGS" || { echo "Error: Configuration failed for $BUILD_NAME."; exit 1; }
@@ -150,8 +153,8 @@ process_build() {
 
   # Simulate library verification
   echo "Simulating: Verifying $build_dir/lib/libcblas.a and $build_dir/lib/libatlas.a"
-  mkdir -p "$build_dir/lib"  # Create the lib directory to simulate the build
-  touch "$build_dir/lib/libcblas.a" "$build_dir/lib/libatlas.a"  # Create dummy library files
+  mkdir -p "$build_dir/lib"  >>"$LOG_FILE" 2>&1 # Create the lib directory to simulate the build
+  touch "$build_dir/lib/libcblas.a" "$build_dir/lib/libatlas.a"  >>"$LOG_FILE" 2>&1 # Create dummy library files
 
 #########################
 
@@ -179,6 +182,8 @@ determine_node_numbers
 for ((i=current_node_ord_number+1; i<=NUM_OF_BUILDS; i+=total_nodes)); do
   echo -e "NUM OF BUILDS: $NUM_OF_BUILDS"   >> "$LOG_FILE"
   echo -e "total_nodes: $total_nodes"   >> "$LOG_FILE"
+  echo -e "current_node_ord_number: $current_node_ord_number"   >> "$LOG_FILE"
+  echo -e "Processing build index $i"   >> "$LOG_FILE"
   line=$(sed -n "${i}p" "$BUILD_INFO")
   echo "${hostname} is building line ${i} of ATLAS build: $line" >> "$LOG_FILE"
   process_build "$line" || echo "WARNING: Failed to process build: $line" >> "$LOG_FILE"
