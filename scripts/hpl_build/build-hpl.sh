@@ -127,6 +127,9 @@ process_build() {
   sed -i "s/buildname/$build_name/g" "Make.$build_name"
   sed -i "s/gccflags/$build_opt_flags $build_flags/g" "Make.$build_name"
 
+  # Update LAdir to point to the correct ATLAS build directory
+  sed -i "s|^LAdir *=.*|LAdir = ${ATLAS_STORAGE}/$build_name|g" "Make.$build_name"
+
   # Update the CC line to use the MPICH directory from the config file
   sed -i "s|^CC *=.*|CC = $MPICH_DIR/bin/mpicc|g" "Make.$build_name"
 
