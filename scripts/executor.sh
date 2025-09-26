@@ -221,7 +221,7 @@ run_fanout() {
 
 # Function to run HPL execution
 run_hpl_execution() {
-  "$SCRIPTS_DIR/HPL_run/HPL-execute.sh"
+  "$SCRIPTS_DIR/HPL_run/HPL-execute.sh" "$config_file" #config_file is passed to get_throttling, not necessary for HPL-execute itself
 }
 
 # Main function to execute selected steps

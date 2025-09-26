@@ -8,6 +8,12 @@ fi
 
 # Function to initialize variables
 initialize_variables() {
+    if [ "$BLAS_IMPL" = "OpenBLAS" ]; then
+        HPL_PATH="$HPL_DIR/bin/linux_OpenBLAS"
+    else
+        HPL_PATH="$HPL_DIR/bin/$BUILD_NAME"
+    fi
+
     (( NUM_PROCESSES = NUM_OF_NODES * CORES_PER_NODE ))
     IFS=' ' read -ra RUNs <<< "$RUNs"
     IFS=' ' read -ra Ns <<< "$Ns"
@@ -122,7 +128,6 @@ run_hpl() {
 
 # Function to handle throttling information
 handle_throttling_info() {
-    local CONFIG_FILE=$1
     local before=()
     local after=()
 
@@ -190,16 +195,11 @@ extract_and_format_result_line() {
 
 # Main function
 main() {
+    CONFIG_FILE="$1"  # Added: Get config file path from argument
     initialize_variables
     read_existing_measurements
 
     for BUILD_NAME in "${BUILDS[@]}"; do
-        if [ "$BLAS_IMPL" = "OpenBLAS" ]; then
-            HPL_PATH="$HPL_DIR/bin/linux_OpenBLAS"
-        else
-            HPL_PATH="/bin/$BUILD_NAME"
-        fi
-
         mkdir -p "$RESULTSDIR/$BUILD_NAME"
         for RUN in "${RUNs[@]}"; do
             #printf "%s %s " "$BUILD_NAME" "${RUN}${HPL_DAT_EXTRA_COLUMN}" >> "$RESULTSFILE"
