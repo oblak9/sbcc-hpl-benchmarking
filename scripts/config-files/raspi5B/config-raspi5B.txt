@@ -19,7 +19,7 @@ RUNs="0 1 2 3 4"
 ################
 # HPL RUN
 ################
-MPIEXEC_BIND_TO="--bind-to core"
+MPIEXEC_BIND_TO=""
 BLAS_IMPL="ATLAS"
 WARMUP="no"
 BUILD_RUN="no"

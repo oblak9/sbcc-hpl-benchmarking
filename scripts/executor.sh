@@ -34,6 +34,8 @@ load_cfg() {
       key=${line%%=*}; val=${line#*=}
       key="${key#"${key%%[![:space:]]*}"}"; key="${key%"${key##*[![:space:]]}"}"
       val="${val#"${val%%[![:space:]]*}"}"; val="${val%"${val##*[![:space:]]}"}"
+      # Strip surrounding quotes if present
+      val="${val#\"}"; val="${val%\"}"
       CFG["$key"]="$val"
     done < "$f"
   }
