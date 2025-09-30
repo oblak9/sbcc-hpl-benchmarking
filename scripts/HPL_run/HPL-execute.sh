@@ -60,7 +60,7 @@ read_existing_measurements() {
 calculate_nround() {
     local N=$1
     local NB=$2
-    echo $(python -c "print(int(round($N / $NB) * $NB))")
+    python -c "import sys; n=int(sys.argv[1]); nb=int(sys.argv[2]); print(int(round(n / nb) * nb))" "$N" "$NB"
 }
 
 # Function to configure HPL

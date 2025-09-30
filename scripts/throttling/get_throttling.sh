@@ -8,5 +8,5 @@ master_node_number="${MASTER_DEVICE//[!0-9]}"
 for ((i=$master_node_number; i<$(expr $master_node_number + $NUM_OF_NODES); i+=1)); do
     host_number=$(printf "%02d" "$i")
     current_host="${MASTER_DEVICE//[0-9]}"$host_number
-    ssh $current_host -- $SCRIPTS_DIR/throttling/get_throttling_helper.sh $CONFIG_FILE
+    ssh $current_host -- $SCRIPTS_DIR/throttling/get_throttling_helper.sh $MONITOR_THROTTLING_CPU
 done

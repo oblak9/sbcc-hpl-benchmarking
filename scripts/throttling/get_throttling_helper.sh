@@ -1,7 +1,5 @@
 #!/bin/bash
-CONFIG_FILE=$1
-source $CONFIG_FILE
-
+MONITOR_THROTTLING_CPU=$1
 THROTTLE_INFO=/sys/devices/system/cpu/$MONITOR_THROTTLING_CPU/cpufreq/stats/time_in_state
 
 #The three lines before the last represent the biggest three frequencies smaller then the biggest
