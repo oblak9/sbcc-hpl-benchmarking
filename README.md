@@ -156,6 +156,6 @@ MIT License. See LICENSE for details.
 If using this repo, cite:
 > Re-evaluating Compute Performance in SBC Clusters: HPL Benchmarking Across Generations  
 > Submitted to *Future Generation Computer Systems*, 2025  
-> DOI: [TBD]
+> DOI: [10.1016/j.future.2025.108137]
 
 For questions or contributions, open an issue or PR! 🎉
